@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	{% load static %}
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link rel="icon" type="image/x-icon" href={% static "/img/ic_app.png" %}>
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<!-- My CSS -->
+	<link rel="stylesheet" href={% static 'css/style.css' %}>
+
+	<title>Queslet</title>
+</head>
+
+<body>
+
+	<div class="body-all">
+		<!-- SIDEBAR -->
+		<section id="sidebar" class="hide" >
+			<a href="{% url "home" %}" class="brand">
+				<img class="web-icon" src={% static 'img/ic_app.png' %} alt="Avatar" class="image">
+				<span class="text">Queslet</span>
+			</a>
+			<ul class="side-menu top">
+				<li class="active">
+					<a href="#">
+						<i class='bx bxs-dashboard'></i>
+						<span class="text">Questions bank</span>
+					</a>
+				</li>
+
+				<li>
+					<a href="#">
+						<i class='bx bxs-doughnut-chart'></i>
+						<span class="text">Analytics</span>
+					</a>
+				</li>
+
+			</ul>
+			<ul class="side-menu">
+				<li>
+					<a href="#">
+						<i class='bx bxs-cog'></i>
+						<span class="text">Settings</span>
+					</a>
+				</li>
+
+			</ul>
+		</section>
+		<!-- SIDEBAR -->
+
+
+
+		<!-- CONTENT -->
+		<section id="content">
+			<!-- NAVBAR -->
+			<nav>
+				<i class='bx bx-menu'></i>
+				<input type="checkbox" id="switch-mode" hidden>
+
+
+			</nav>
+			<!-- NAVBAR -->
+
+			<!-- MAIN -->
+            {% if mcqs.count != 0 %}
+			<main>
+				<div class="head-title">
+					<div class="left">
+						<h1>question: {{mcqs.0.qid}}</h1>
+					</div>
+				</div>
+
+				<div class="table-data">
+					<div class="order">
+			
+						<table class="table-data-mcq">
+							<tbody>
+                                <tr>
+									<th>Id</th>
+									<td>{{mcqs.0.qid}}</td>
+								</tr>
+                                <tr>
+									<th>Question</th>
+									<td>{{mcqs.0.question}}</td>
+								</tr>
+							<tr>
+								<th>
+									Image
+                                </th>
+
+                                <td>  
+                                   
+									{% if mcqs.0.contain_img %}
+                                   
+									{% if temp_path == 1  %}
+									<img class="mcq-img-big"  src= '../static/temp/{{mcqs.0.q_image}}'>
+									{% else %}
+									<img class="mcq-img-big"  src= 'media/images/{{mcqs.0.q_image}}'>
+									{% endif %}
+									 {% endif %}
+								
+                                </td>
+							</tr>
+                        
+                            <tr>
+                                <th>Options</th>
+                                <td>{{mcqs.0.options}}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Answer</th>
+                                <td>{{mcqs.0.answer_q}}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Subject</th>
+                                <td>{{mcqs.0.subject}}</td>
+                            </tr>
+							</tbody>
+						</table>
+
+						<!-- https://pypi.org/project/django-mathfilters/-->
+			</main>
+			<!-- MAIN -->
+            {% else %}
+            <main>
+				<div class="head-title">
+					<div class="left">
+						<h1>Not found ID</h1>
+					</div>
+				</div>
+            {% endif %}
+		</section>
+		
+		
+
+		<!-- CONTENT -->
+		<script src={% static 'js/script.js' %}></script>
+
+	</div>
+
+</body>
+
+</html>
