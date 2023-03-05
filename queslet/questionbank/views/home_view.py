@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpRequest
 from ..models.models import Mcq
 from django.core.paginator import Paginator
@@ -6,6 +6,8 @@ from django.core.paginator import Paginator
 # Create your views here.
 
 def home(request):
+      if not request.user.is_authenticated:
+         return redirect('login')
       
       if request.method == "GET":
         # Load data

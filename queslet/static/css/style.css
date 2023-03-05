@@ -272,11 +272,15 @@ body {
 	justify-content: center;
 	align-items: center;
 }
-#content nav .profile img {
-	width: 36px;
-	height: 36px;
-	object-fit: cover;
-	border-radius: 50%;
+#content nav .profile  {
+	font-size: 20px;
+	color: var(--theme);
+}
+.Login{
+	font-weight: bold;
+}
+#content nav .profile:hover  {
+	color: var(--theme-light);
 }
 
 .web-icon{
@@ -504,13 +508,21 @@ body {
 	margin-left: 10px;
 }
 
+ li a {
+
+	color: var(--dark);
+	font-weight: bolder;
+}
+li a:hover {
+	color: var(--theme);
+}
+
 .table-data td a {
 
 	color: var(--dark);
 	font-weight: bolder;
 }
 .table-data td a:hover {
-
 	color: var(--theme);
 }
 .action-dup{
@@ -519,23 +531,21 @@ font-size: 30px;
 margin: 15px;
 }
 
-.action-dup .bx-check {
+ .bx-check {
 	color: var(--theme-light);
+	font-size: 30px;
+
 }
 
-.action-dup .bx-check:hover {
-	transform: scale(1.5);
-}
 
-.action-dup .bx-x:hover {
-	transform: scale(1.5);
-}
 
-.action-dup .bx-edit-alt:hover {
+
+ .bx-edit-alt:hover {
 	transform: scale(1.5);
 }
-.action-dup .bx-x {
+ .bx-x {
 	color: var(--red);
+	font-size: 30px;
 }
 
 .mcq-img-big{

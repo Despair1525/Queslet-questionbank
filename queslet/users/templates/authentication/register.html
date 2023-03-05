@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- Coding by CodingLab | www.codinglabweb.com-->
+<html lang="en" dir="ltr">
+  <head>
+    {% load static %}
+
+    <meta charset="UTF-8" />
+    <!--<title> Login and Registration Form in HTML & CSS | CodingLab </title>-->
+    <link rel="stylesheet" href="{% static 'css/auth_style.css' %}" />
+    <!-- Fontawesome CDN Link -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <form action="{% url 'register' %}" method="POST" class="register active">
+        {% csrf_token %}
+        <img src="{% static 'img/ic_app.png' %} " />
+        <h2 class="title">Register</h2>
+        {% if form.errors %}
+
+        <div class="alert alert-warning">There was an errors</div>
+        {% endif %} {{form.as_p}}
+
+        <button type="submit" class="btn-submit">Register</button>
+
+        {% comment %}
+        <div class="form-group">
+          <label for="username">username</label>
+          <div class="input-group">
+            <input
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Username"
+            />
+            {% endcomment %} {% comment %} <i class="bx bx-user"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-group">
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Your password"
+            />
+            <i class="bx bx-lock-alt"></i>
+          </div>
+          <span class="help-text">At least 8 characters</span>
+        </div>
+        <div class="form-group">
+          <label for="confirm-pass">Confirm password</label>
+          <div class="input-group">
+            <input
+              type="password"
+              id="confirm-pass"
+              placeholder="Enter password again"
+            />
+            <i class="bx bx-lock-alt"></i>
+          </div>
+          <span class="help-text"
+            >Confirm password must be same with password</span
+          >
+        </div>
+        <button type="submit" class="btn-submit">Register</button>
+        <p>
+          I already have an account.
+          <a href="#" onclick="switchForm('login', event)">Login</a>
+        </p>
+        {% endcomment %}
+      </form>
+    </div>
+  </body>
+</html>

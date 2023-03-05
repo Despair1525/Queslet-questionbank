@@ -83,6 +83,7 @@
 					</form>
 			</main>
 			{% else %}
+
 			<main>
 				<div class="head-title">
 					<div class="left">
@@ -90,33 +91,8 @@
 					</div>
 				</div>
 
-				<ul class="box-info">
-					<li>
-						<i class='bx bxs-bank'></i>
-						<span class="text">
-							<h3>{{total}}</h3>
-							<p>Total questions</p>
-						</span>
-					</li>
-					<li>
-						<i class='bx bx-image'></i>
-						<span class="text">
-							<h3>{{num_img}}</h3>
-							<p>Image questions</p>
-						</span>
-					</li>
-					<li>
-						<i class='bx bx-category'></i>
-						<span class="text">
-							<h3>{{num_subject}}</h3>
-							<p>Subjects</p>
-						</span>
-					</li>
-				</ul>
-
 				<div class="table-data">
 					<div class="order">
-				
 						<table>
 							<thead>
 								<tr>
@@ -139,26 +115,40 @@
 								<td>
 									<p>{{mcq_dup.1}}</p>
 								</td>
-								<td>
-									<div class="action-dup">
-										<i class='bx bx-check'></i>
-										<i class='bx bx-x' ></i>
-										<i class='bx bx-edit-alt'></i>
-									</div>
-								</td>
+								
 							</tr>
 
 							{% endfor %}
 							 {% endfor %}
 							</tbody>
 						</table>
+					</div>
 
-						<!-- https://pypi.org/project/django-mathfilters/-->
-					{% load mathfilters %}
-					
+						<div class="todo">
+							<div class="head">
+								<h3>Import mcqs</h3>
+							</div>
+							<form action ="{% url 'import_view' %}" method ="post">
+								{% csrf_token %}
+							<ul class="todo-list">
+								{% for mcq_import in request.session.temp_mcq %}
+
+ 							 <li class="completed">
+								<label for="{{mcq_import}}"><a href="{% url "mcq_view" %}?mcq={{mcq_import}}&temp=1">{{mcq_import}}</a></label>
+								<input type="checkbox"  name="check_import" id={{mcq_import}} value="{{mcq_import}}" checked>
+
+                		
+              					</li>
+								{% endfor %}
+							</ul>
+							<input name="submit_import" type="submit" value="submit_import">
+						</form>
+						</div>
 				</div>
-
+	
 			</main>
+
+			
 {% endif %}
 			<!-- MAIN -->
 		</section>
