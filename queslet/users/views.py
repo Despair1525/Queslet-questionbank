@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group, Permission, User
+from django.contrib.contenttypes.models import ContentType
 
 # from django.contrib.auth.forms import 
 # Create your views here.
@@ -26,7 +28,7 @@ def login_users(request):
             messages.success(request,("User or password not valid"))
             return redirect('login')
 
-        return render(request,"authentication/login.html",{})
+        
         pass
     else:
 
@@ -47,6 +49,12 @@ def register_users(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             user = authenticate(username=username,password=password)
+            print("Register User succesfully !")
+
+            #add to default/ teachee group 
+            teacher = Group.objects.get(name='teacher')
+            user.groups.add(teacher)
+            
 
             login(request,user)
             return redirect('home')

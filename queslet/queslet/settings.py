@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'queslet.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mcqs',
+        'NAME': 'queslet',
         'USER': 'postgres',
         'PASSWORD': '1508',
         'HOST': 'localhost',

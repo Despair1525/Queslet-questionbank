@@ -728,6 +728,56 @@ line-height: 50px;
 		color: #64A46C;
 	   }
 
-
+	   select {
+		-webkit-appearance:none;
+		-moz-appearance:none;
+		-ms-appearance:none;
+		appearance:none;
+		outline:0;
+		box-shadow:none;
+		flex: 1;
+		padding: 0 .5em;
+		cursor:pointer;
+	
+		border-radius: 10px;
+		border: 0.5px solid var(--dark-grey);
+	
+		font-family: var(--lato);;
+		color: var(--dark);
+		font-weight: bold;
+		font-size: 20px;
+	 }
+	 select::-ms-expand {
+		display: none;
+	 }
+	 .select {
+		margin-top: 20px;
+		position: relative;
+		display: flex;
+		width: 10em;
+		height: 2.5em;
+		line-height: 3;
+		overflow: hidden;
+		border-radius: 10px;
+		
+		
+	
+	 }
+	 .select::after {
+		content: '\25BC';
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 0 1em;
+		background: var(--theme-light);
+		cursor:pointer;
+		pointer-events:none;
+		transition:.25s all ease;
+		
+	 }
+	 .select:hover::after {
+		color:var( --theme);
+	 }
+	
 
 	   

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Boxicons -->
+    <link rel="icon" type="image/x-icon" href={% static "/img/ic_app.png" %}>
+    <link
+      href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!-- My CSS -->
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+
+    <title>Queslet</title>
+  </head>
+</html>
+<body>
+
+	<div class="body-all">
+
+        {% block sidebar %}
+		<!-- SIDEBAR -->
+		<!-- SIDEBAR -->
+        {% endblock %}
+
+
+		<!-- CONTENT -->
+		<section id="content">
+			<!-- NAVBAR -->
+			<nav>
+				<i class='bx bx-menu'></i>
+
+				<form action= "{% url 'search_view' %}" method="get">
+					{% csrf_token %}
+					<div class="form-input">
+						<input name="search_text" type="search" placeholder="Search...">
+						<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+
+						<i class='bx bx-filter'></i>
+					</div>
+				</form>
+
+
+				{% comment %} <input type="checkbox" id="switch-mode" hidden>
+				<label for="switch-mode" class="switch-mode"></label> {% endcomment %}
+
+				{% if user.is_authenticated %}
+				<a href="{% url 'logout' %}" class="profile">
+					
+					{{ user.get_username }}|logout
+					<i class='bx bx-exit'></i>
+				  </a>
+				{% else %}
+				<a href="{% url 'login' %}" class="profile Login">
+					Login
+					<i class='bx bxs-user-circle'></i>
+				  </a>
+				
+				{% endif %}
+
+
+			</nav>
+			<!-- NAVBAR -->
+
+			<!-- MAIN -->
+			<main>
+				{% block content %}
+                {% endblock %}
+
+			</main>
+			<!-- MAIN -->
+		</section>
+		
+		<!-- CONTENT -->
+		<script src={% static 'js/script.js' %}></script>
+	</div>
+
+</body>
+
+</html>

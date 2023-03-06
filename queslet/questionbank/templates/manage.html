@@ -1,0 +1,33 @@
+{% extends "home_base.html" %}
+{% load static %}
+{% block sidebar %}
+<section id="sidebar" class="hide" >
+	<a href="{% url "home" %}" class="brand">
+		<img class="web-icon" src={% static 'img/ic_app.png' %} alt="Avatar" class="image">
+		<span class="text">Queslet</span>
+	</a>
+	<ul class="side-menu top">
+
+		<li >
+			<a href="{% url "home" %}">
+				<i class='bx bxs-home' ></i>
+				<span class="text">Questions bank</span>
+			</a>
+		</li>
+
+		<li class="active">
+			<a href="#">
+				<i class='bx bxs-doughnut-chart'></i>
+				<span class="text">Manage Access</span>
+			</a>
+		</li>
+
+	</ul>
+	
+</section>
+{% endblock %}
+
+{% block content %}
+
+
+{% endblock%}

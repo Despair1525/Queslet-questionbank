@@ -1,6 +1,22 @@
 from django.db import models
-
+from django.contrib.auth.models import  User
 # Create your models here.
+class Subject(models.Model):
+    subject = models.TextField(primary_key=True)
+    description = models.TextField(null=True,blank=True)
+    user = models.ForeignKey(User, to_field="username",on_delete=models.CASCADE,default="admin")
+ 
+class SubjectAccess(models.Model):
+    teacher = models.ForeignKey(User, to_field="username",on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['teacher', 'subject'], name='unique_teacher_subject_combination'
+            )
+        ]
+
 class Mcq(models.Model):
     qid = models.TextField(primary_key=True)
     question = models.TextField(null= True, blank= True)
@@ -9,8 +25,10 @@ class Mcq(models.Model):
     answer_q = models.TextField(null= True, blank= True)
     subject = models.TextField()
     contain_img = models.BooleanField()
-
     img_file = models.ImageField(null= True, blank= True, upload_to="images/")
+
+    user = models.ForeignKey(User, to_field="username",on_delete=models.CASCADE,default="admin")
+ 
 
     
     def getMcq(self,question_image=""): 
@@ -27,5 +45,3 @@ class Mcq(models.Model):
             mcq += chr(a + i) +")" + " " + str(op) + " "
         return mcq
     
-    class Meta:
-        db_table = "mcqs"

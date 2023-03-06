@@ -1,193 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "home_base.html" %}
+{% load static %}
+{% block sidebar %}
+<section id="sidebar" class="hide" >
+	<a href="{% url "home" %}" class="brand">
+		<img class="web-icon" src={% static 'img/ic_app.png' %} alt="Avatar" class="image">
+		<span class="text">Queslet</span>
+	</a>
+	<ul class="side-menu top">
 
-<head>
-	{% load static %}
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- Boxicons -->
-	<link rel="icon" type="image/x-icon" href={% static "/img/ic_app.png" %}>
-	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-	<!-- My CSS -->
-	<link rel="stylesheet" href={% static 'css/style.css' %}>
-
-	<title>Queslet</title>
-</head>
-
-<body>
-
-	<div class="body-all">
-		<!-- SIDEBAR -->
-		<section id="sidebar" class="hide" >
-			<a href="{% url "home" %}" class="brand">
-				<img class="web-icon" src={% static 'img/ic_app.png' %} alt="Avatar" class="image">
-				<span class="text">Queslet</span>
+		<li class="active">
+			<a href="#">
+				<i class='bx bxs-home' ></i>
+				<span class="text">Questions bank</span>
 			</a>
-			<ul class="side-menu top">
-				<li class="active">
-					<a href="#">
-						<i class='bx bxs-dashboard'></i>
-						<span class="text">Questions bank</span>
-					</a>
-				</li>
+		</li>
+{% if isManager %}
+		<li>
+			<a href="{% url "manage" %}">
+				<i class='bx bxs-doughnut-chart'></i>
+				<span class="text">Manage Access</span>
+			</a>
+		</li>
 
-				<li>
-					<a href="#">
-						<i class='bx bxs-doughnut-chart'></i>
-						<span class="text">Analytics</span>
-					</a>
-				</li>
+		{% endif %}
 
-			</ul>
-			<ul class="side-menu">
-				<li>
-					<a href="#">
-						<i class='bx bxs-cog'></i>
-						<span class="text">Settings</span>
-					</a>
-				</li>
+	</ul>
+	
+</section>
+{% endblock %}
 
-			</ul>
-		</section>
-		<!-- SIDEBAR -->
+{% block content %}
 
+{% if subjects %}
 
+<div class="head-title">
+	<div class="left">
+		<h1>Questions bank</h1>
 
-		<!-- CONTENT -->
-		<section id="content">
-			<!-- NAVBAR -->
-			<nav>
-				<i class='bx bx-menu'></i>
+	</div>
+	<a href="{% url 'import_view' %}" class="btn-upload">
+		<i class='bx bxs-cloud-upload'></i>
+		<span class="text">Import questions</span>
+	</a>
+</div>
 
-				<form action= "{% url 'search_view' %}" method="get">
-					{% csrf_token %}
-					<div class="form-input">
-						<input name="search_text" type="search" placeholder="Search...">
-						<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+<form action="{% url 'home' %}" method ="GET" >
+	<div class="select" >
+	  <select name="subjected" id="format" onchange="this.form.submit()">
+		{% for sub in subjects %}
+		{% if sub.subject == subjects_selected %}
+		<option value="{{sub.subject}}" selected>{{sub.subject}}</option>
+		{% else %}
+		<option value="{{sub.subject}}">{{sub.subject}}</option>
+		{% endif %}
+		{% endfor %}
+	  </select>
+	</div>
+  </form>
 
-						<i class='bx bx-filter'></i>
-					</div>
-				</form>
-
-
-				{% comment %} <input type="checkbox" id="switch-mode" hidden>
-				<label for="switch-mode" class="switch-mode"></label> {% endcomment %}
-
-				{% if user.is_authenticated %}
-				<a href="{% url 'logout' %}" class="profile">
-					
-					{{ user.get_username }}|logout
-					<i class='bx bx-exit'></i>
-				  </a>
-				{% else %}
-				<a href="{% url 'login' %}" class="profile Login">
-					Login
-					<i class='bx bxs-user-circle'></i>
-				  </a>
-				
-				{% endif %}
-
-
-			</nav>
-			<!-- NAVBAR -->
-			<!-- MAIN -->
-			<main>
-				<div class="head-title">
-					<div class="left">
-						<h1>Questions bank</h1>
-
-					</div>
-					<a href="{% url 'import_view' %}" class="btn-upload">
-						<i class='bx bxs-cloud-upload'></i>
-						<span class="text">Import questions</span>
-					</a>
-				</div>
-
-				<ul class="box-info">
-					<li>
-						<i class='bx bxs-bank'></i>
-						<span class="text">
-							<h3>{{total}}</h3>
-							<p>Total questions</p>
-						</span>
-					</li>
-					<li>
-						<i class='bx bx-image'></i>
-						<span class="text">
-							<h3>{{num_img}}</h3>
-							<p>Image questions</p>
-						</span>
-					</li>
-					<li>
-						<i class='bx bx-category'></i>
-						<span class="text">
-							<h3>{{num_subject}}</h3>
-							<p>Subjects</p>
-						</span>
-					</li>
-				</ul>
+<ul class="box-info">
+	<li>
+		<i class='bx bxs-bank'></i>
+		<span class="text">
+			<h3>{{total}}</h3>
+			<p>Total questions</p>
+		</span>
+	</li>
+	<li>
+		<i class='bx bx-image'></i>
+		<span class="text">
+			<h3>{{num_img}}</h3>
+			<p>Image questions</p>
+		</span>
+	</li>
+	<li>
+		<i class='bx bx-category'></i>
+		<span class="text">
+			<h3>{{num_subject}}</h3>
+			<p>Subjects</p>
+		</span>
+	</li>
+</ul>
 
 
-				<div class="table-data">
-					<div class="order">
-						<div class="head">
-							<h3>Questions</h3>
+<div class="table-data">
+	<div class="order">
+		<div class="head">
+			<h3>Questions</h3>
 
-						</div>
-						<table>
-							<thead>
-								<tr>
-									<th>Id</th>
-									<th>Question</th>
-									<th>Image</th>
-								</tr>
-							</thead>
-							<tbody>
-							
-							{% for mcq in lst_mcqs %}
-							<tr>
-								<td>
-									<a href="{% url "mcq_view" %}?mcq={{mcq.qid}}">{{mcq.qid}}</a>
-								<td>
-									{% if  mcq.question == None %}
-									<p> Answer the question in images </p>
-									{% else %}
-									<p>{{mcq.question}}</p>
-									{% endif %}
-								</td>
-								<td><span>
-									{% if mcq.contain_img %}
-									<img class="mcq-img"  src= 'media/images/{{mcq.q_image}}'>
-									 {% endif %}
-								</span></td>
-								</td>
-							</tr>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Question</th>
+					<th>Image</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+			{% for mcq in lst_mcqs %}
+			<tr>
+				<td>
+					<a href="{% url "mcq_view" %}?mcq={{mcq.qid}}">{{mcq.qid}}</a>
+				<td>
+					{% if  mcq.question == None %}
+					<p> Answer the question in images </p>
+					{% else %}
+					<p>{{mcq.question}}</p>
+					{% endif %}
+				</td>
+				<td><span>
+					{% if mcq.contain_img %}
+					<img class="mcq-img"  src= 'media/images/{{mcq.q_image}}'>
+					 {% endif %}
+				</span></td>
+				</td>
+			</tr>
 
-							 {% endfor %}
-							</tbody>
-						</table>
+			 {% endfor %}
+			</tbody>
+		</table>
 
-						<!-- https://pypi.org/project/django-mathfilters/-->
-					{% load mathfilters %}
-					<div class="pageBody">
-						 <a href="{% url 'home' %}?page={{page|sub:1}}" class ="prev">< Prev</a> 
-						 <a href="{% url 'home' %}?page={{page|add:1}}" class ="prev" class ="next">Next ></a> 
-					</div>
-				</div>
-
-			</main>
-			<!-- MAIN -->
-
-		</section>
-		
-		
-
-		<!-- CONTENT -->
-		<script src={% static 'js/script.js' %}></script>
+		<!-- https://pypi.org/project/django-mathfilters/-->
+	{% load mathfilters %}
+	<div class="pageBody">
+		 <a href="{% url 'home' %}?page={{page|sub:1}}&subjected={{subjects_selected}}" class ="prev">< Prev</a> 
+		 <a href="{% url 'home' %}?page={{page|add:1}}&subjected={{subjects_selected}}" class ="prev" class ="next">Next ></a> 
+	</div>
+</div>
+{% else %}
+<div class="head-title">
+	<div class="left">
+		<h1>You are not assinged any subjects</h1>
 
 	</div>
 
-</body>
+</div>
 
-</html>
+{% endif %}
+{% endblock%}
