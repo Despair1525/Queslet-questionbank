@@ -795,6 +795,53 @@ line-height: 50px;
 		margin-top: 20px;
 		font-weight: bolder;
 	  }
+	  .box-upload{
+		margin-top: 20px;
+		margin-left: 30%;
+		box-shadow: 0 0 2px rgba(#000, .3);
+  		background-color: white;
+  width: 350px;
+  padding: 30px;
+  border-radius: 20px;
+
+  border: 1px solid var(--dark-grey);
+	  }
+	  .box-upload #id_file {
+		color: var(--dark-grey);
+		font-weight: bold;
+	  }
+	  .box-upload #id_file::file-selector-button {
+		display: block;
+  padding: 14px 45px;
+  background: var(--theme-light);
+  color: #fff;
+  font-size: 1em;
+  transition: all .4s;
+  cursor: pointer;
+  border: none;
+  margin-bottom: 10px;
+  border-radius: 20px;
+		
+	}
+	.box-upload #id_file::file-selector-button:hover {
+
+  background: var(--theme);
+
+		
+	}
+	  .box-upload input[type=submit]:hover {
+		background-color: var(--theme-light);
+	  }
+	 .box-upload input[type=submit] {
+		background-color: var(--theme);
+		color: white;
+		padding: 12px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		margin-top: 20px;
+		font-weight: bolder;
+	  }
 
 
 	 form .todo-list input[type=submit]:hover {

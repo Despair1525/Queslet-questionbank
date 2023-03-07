@@ -33,31 +33,22 @@ class connector():
         namespace=namespace,
         include_metadata=include_metadata
         )
+        return result
+# row = (qid,encode,{'question':question,'answer':str(answer_q),'contain_images':contain,'image':q_image})
 
+    def upload(self,qid,encode,question,contain,q_image,subject):
+        # print(type(encode))
+        # print(encode)
+        # print("Upload ID",qid)
 
+        row =[ (qid,list(encode),{'question':str(question),'contain_images':contain,'image':str(q_image)})]
+
+        print(row)
+
+        try:
+            result = self.index.upsert(row,namespace=subject)
+        except:
+            self.index = pinecone.Index('qb-mcq-index')
+            result = self.index.upsert(row,namespace=subject)
         return result
 
-
-
-    # def query_mcqs_text(self,text,model,namespace,k=5,include_values=False,include_metadata=True):
-    #     encode = model.encode(str(text)).tolist()
-    #     return self.index.query(
-    #     vector=encode,
-    #     top_k=5,
-    #     include_values=include_values,
-    #     namespace=namespace,
-    #     include_metadata=include_metadata
-    #     )
-
-# # connect to index
-# index = pinecone.Index('qb-mcq-index')
-
-# def query_mcqs(encode,namespace,k=5,include_values=False,include_metadata=True):
-#     return index.query(
-#     vector=encode,
-#     top_k=5,
-#     include_values=include_values
-#     ,
-#     namespace=namespace,
-#     include_metadata=include_metadata
-#     )

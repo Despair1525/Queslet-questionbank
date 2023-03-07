@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from django.http import HttpRequest
 from ..models.models import Mcq,Subject,SubjectAccess
 from django.core.paginator import Paginator
+from django import template
+from django.template.defaulttags import register
 
 # Create your views here.
 
@@ -66,3 +68,7 @@ def home(request):
       
 def isManger(User):
     return User.groups.filter(name='manager').exists() 
+
+@register.filter(name='has_group') 
+def has_group(user, group_name):
+    return user.groups.filter(name=group_name).exists() 

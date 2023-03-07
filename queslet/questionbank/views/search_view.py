@@ -27,9 +27,13 @@ def search_view(request):
 
     if request.method =="GET":
         if request.GET.get("search_text") != None:
+            
             search_text = request.GET.get("search_text")
+            subject_selected = request.GET.get("search-submit")
+            print(subject_selected)
+
             encode_search = SbertModel.encode(str(search_text)).tolist()
-            search_result = conn.query_mcqs_encode(encode_search,"math",k=10)
+            search_result = conn.query_mcqs_encode(encode_search,subject_selected,k=10)
 
             print(search_result)
             #get List mcqs 

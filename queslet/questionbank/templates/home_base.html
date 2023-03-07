@@ -20,11 +20,33 @@
 <body>
 
 	<div class="body-all">
-
-        {% block sidebar %}
-		<!-- SIDEBAR -->
-		<!-- SIDEBAR -->
-        {% endblock %}
+  <!-- sidebar -->
+		<section id="sidebar" class="hide" >
+			<a href="{% url "home" %}" class="brand">
+				<img class="web-icon" src={% static 'img/ic_app.png' %} alt="Avatar" class="image">
+				<span class="text">Queslet</span>
+			</a>
+			<ul class="side-menu top">
+		
+				<li {% block activeHome %} {% endblock %} >
+					<a href="{% url "home" %}">
+						<i class='bx bxs-home' ></i>
+						<span class="text">Questions bank</span>
+					</a>
+				</li>
+		{% if request.user|has_group:"manager" %}
+				<li {% block activeManage %} {% endblock %} >
+					<a href="{% url "manage" %}">
+						<i class='bx bxs-doughnut-chart'></i>
+						<span class="text">Manage Access</span>
+					</a>
+				</li>
+		
+		{% endif %}
+		
+			</ul>
+			
+		</section>
 
 
 		<!-- CONTENT -->

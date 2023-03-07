@@ -7,7 +7,8 @@ from django.core.files.storage import default_storage
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from ..models.models import Mcq
+from ..models.models import Mcq,Subject,SubjectAccess
+from ..ultils import isManger
 from docx import Document
 import os
 import shutil
@@ -39,6 +40,7 @@ SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=devi
 #Sbert 
 
 def import_view(request):
+
     if request.method == "POST":
 
         if 'submit_import' in request.POST:
@@ -48,14 +50,14 @@ def import_view(request):
             print("--------------------------")
             temp_dct = request.session['temp_mcq']
 
+            currentUser = request.user
 
             for key_mcq in checked_items:
                 mcq = temp_dct[key_mcq]
-                print( mcq )
-                print(mcq["encode"])
+                encode = mcq["encode"]
                 subject = mcq["subject"]
                 #generate new id
-                user_name ="admin"
+                user_name = request.user.username
                 new_id = subject+"-"+user_name+"-"+get_time()
                 #get attr
                 question = mcq["question"]
@@ -78,7 +80,9 @@ def import_view(request):
                         answer_q = answer,
                         subject = subject,
                         contain_img = haveImage,
-                        img_file = new_path )
+                        img_file = new_path ,
+                        user = currentUser
+                        )
                     # save_mcq.save()
                 else:
                     save_mcq= Mcq( 
@@ -87,31 +91,34 @@ def import_view(request):
                         options = options,
                         answer_q = answer,
                         subject = subject,
-                        contain_img = haveImage
+                        contain_img = haveImage,
+                        user = currentUser
                          )
-                    # save_mcq.save()
-                
-    #                 qid = models.TextField(primary_key=True)
-    # question = models.TextField(null= True, blank= True)
-    # options = models.TextField()
-    # q_image =models.TextField(null= True, blank= True)
-    # answer_q = models.TextField(null= True, blank= True)
-    # subject = models.TextField()
-    # contain_img = models.BooleanField()
+                    images = ""
+                    
+                # save into database
+                save_mcq.save()
+                print("Import Mcq success !")
+                print(save_mcq.subject)
+                print(save_mcq.user)
 
-    # img_file = models.ImageField(null= True, blank= True, upload_to="images/")
+                # save into Pinecone
+                result = conn.upload(qid=new_id,encode=encode,question=question,contain=haveImage,q_image=images,subject=subject)
+                print(result)
+            # Remove file in temp 
 
-                break
-            
-            
+            shutil.rmtree('media/temp')
+
             return redirect(home)
         else:
+            
+            #Import
             form = UploadFileForm(request.POST,request.FILES)
             files = request.FILES.getlist('file')
             list_docx={}
             list_images={} 
-
-            #Load Images and docx file 
+            importSubject = request.session['subjectImport']
+            #Load Images and docx file  
             for file in files:
                 name_file,ex = os.path.splitext(str(file))
                 # document = Document(file)
@@ -120,12 +127,12 @@ def import_view(request):
                     list_docx[str(file)] = []
                     doc = Document(file)
                     for table in doc.tables:
-                        new_mcq = row2mcq(table)
+                        
+                        new_mcq = row2mcq(table,importSubject)
                         list_docx[str(file)].append(new_mcq)
                     # print("Total questions:",len(doc.tables))
                 else:
                     list_images[str(file)] = file
-
                     save_path = "temp/"+file.name
                     default_storage.save(save_path, file)
                     
@@ -153,24 +160,56 @@ def import_view(request):
 
                         # Filter dictionary by keeping elements whose keys are divisible by 2
                     list_id_dup = [ (d["id"],d["score"]) for d in result["matches"] if d["score"] >= 0.75] 
-                    if len(list_id_dup) ==0:
-                        continue
-                    duplicate_mcq.append((mcq,list_id_dup))
+                    if len(list_id_dup) != 0:
+                        duplicate_mcq.append((mcq,list_id_dup))
 
                     mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":mcq.subject,"haveImage":mcq.contain_img,"encode":encode} 
 
             # print("total images",len(list_images))
             # print(list_images)
             request.session['temp_mcq'] = mcqs_set
+            print("import length:",len(mcqs_set))
             # test_dct = request.session['temp_mcq']
             # print(test_dct)
             # print(mcqs_set)
             return render(request, 'import.html',{'dup_result':duplicate_mcq})
     else:
+         #authen the subject import 
+        subjectImport = request.GET.get("subject")
+        currentUser = request.user
+        checkAuthen = authenUserSubject(subjectImport,currentUser)
+        if checkAuthen:
+            print("Ok !")
+        else:
+            return redirect('home')
+
+        request.session['subjectImport'] =  subjectImport
         form = UploadFileForm()
-    return render(request, 'import.html',{'form':form})
+    return render(request, 'import.html',{'form':form,'subjectImport':subjectImport})
 
 
+
+def authenUserSubject(subject,Teacher):
+    print("Import subject",subject)
+    if subject == None:
+        return False
+    
+    if isManger(Teacher):
+        print("is manager !")
+        return True
+    try:
+        ImportSubject = Subject.objects.get(subject=subject)
+    except:
+        print("Cant not find subject")
+        return False
+    
+    try:
+        print(Teacher.username)
+        getAccess = SubjectAccess.objects.get(teacher = Teacher.username, subject = ImportSubject)
+        return True
+    except:
+        print("Cant not find Access")
+        return False 
 
 
 def ocr2Text(file):
@@ -222,16 +261,8 @@ def row2mcq(table,subject="math"):
         new_mcq = Mcq(qid = mcq_name,question = mcq_question,options = str(mcq_options) , q_image = mcq_images , answer_q = ans, subject = subject, contain_img = contain_img, img_file = "temp/"+  mcq_images )
     else:
         new_mcq = Mcq(qid = mcq_name,question = mcq_question,options = str(mcq_options) , q_image = mcq_images , answer_q = ans, subject = subject, contain_img = contain_img )
-
-    # new_mcq = mcq(mcq_name,mcq_question,mcq_options,"",images=mcq_images,haveImages=contain_img, subject="math")
     return new_mcq
 
-    # qid = models.TextField(primary_key=True)
-    # question = models.TextField(null= True, blank= True)
-    # options = models.TextField()
-    # q_image =models.TextField(null= True, blank= True)
-    # answer_q = models.TextField(null= True, blank= True)
-    # subject = models.TextField()
-    # contain_img = models.BooleanField()
 
-    # img_file = models.ImageField(null= True, blank= True, upload_to="images/")
+
+

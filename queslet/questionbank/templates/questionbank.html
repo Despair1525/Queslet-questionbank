@@ -1,32 +1,7 @@
 {% extends "home_base.html" %}
 {% load static %}
-{% block sidebar %}
-<section id="sidebar" class="hide" >
-	<a href="{% url "home" %}" class="brand">
-		<img class="web-icon" src={% static 'img/ic_app.png' %} alt="Avatar" class="image">
-		<span class="text">Queslet</span>
-	</a>
-	<ul class="side-menu top">
-
-		<li class="active">
-			<a href="#">
-				<i class='bx bxs-home' ></i>
-				<span class="text">Questions bank</span>
-			</a>
-		</li>
-{% if isManager %}
-		<li>
-			<a href="{% url "manage" %}">
-				<i class='bx bxs-doughnut-chart'></i>
-				<span class="text">Manage Access</span>
-			</a>
-		</li>
-
-		{% endif %}
-
-	</ul>
-	
-</section>
+{% block activeHome %}
+class =  "active"
 {% endblock %}
 
 {% block subjectFilter %}
@@ -34,11 +9,11 @@
 	{% csrf_token %}
 	<div class="form-input">
 		<input name="search_text" type="search" placeholder="Search...">
-		<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
-
-		
+		<button type="submit"   class="search-btn"   hidden name="search-submit" value="{{subjects_selected}}"><i class='bx bx-search'></i></button>
+	
+	
 	</div>
-</form>
+</form> 
 
 <form action="{% url 'home' %}" method ="GET" >
 	<div class="select" >
@@ -65,7 +40,7 @@
 		<h1>Questions bank</h1>
 
 	</div>
-	<a href="{% url 'import_view' %}" class="btn-upload">
+	<a href="{% url 'import_view' %}?subject={{subjects_selected}}" class="btn-upload">
 		<i class='bx bxs-cloud-upload'></i>
 		<span class="text">Import questions</span>
 	</a>
