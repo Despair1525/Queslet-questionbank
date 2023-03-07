@@ -220,7 +220,6 @@ body {
 #content nav form {
 	max-width: 400px;
 	width: 100%;
-	margin-right: auto;
 }
  .form-input {
 	display: flex;
@@ -275,6 +274,8 @@ body {
 #content nav .profile  {
 	font-size: 20px;
 	color: var(--theme);
+	float: right;
+	margin-left: auto;
 }
 .Login{
 	font-weight: bold;
@@ -744,14 +745,14 @@ line-height: 50px;
 	
 		font-family: var(--lato);;
 		color: var(--dark);
-		font-weight: bold;
-		font-size: 20px;
+		font-size: 15px;
+		font-weight: bolder;
+	
 	 }
 	 select::-ms-expand {
 		display: none;
 	 }
 	 .select {
-		margin-top: 20px;
 		position: relative;
 		display: flex;
 		width: 10em;
@@ -769,22 +770,22 @@ line-height: 50px;
 		top: 0;
 		right: 0;
 		padding: 0 1em;
-		background: var(--theme-light);
+		background: var(--theme);
 		cursor:pointer;
 		pointer-events:none;
 		transition:.25s all ease;
 		
 	 }
 	 .select:hover::after {
-		color:var( --theme);
+		color:var( --theme-light);
 	 }
 	
 
 	 .row input[type=submit]:hover {
-		background-color: var(--theme);
+		background-color: var(--theme-light);
 	  }
 	.row  input[type=submit] {
-		background-color: var(--theme-light);
+		background-color: var(--theme);
 		color: white;
 		padding: 12px 20px;
 		border: none;

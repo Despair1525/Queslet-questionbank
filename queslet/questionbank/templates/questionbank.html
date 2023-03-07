@@ -29,6 +29,33 @@
 </section>
 {% endblock %}
 
+{% block subjectFilter %}
+<form action= "{% url 'search_view' %}" method="get">
+	{% csrf_token %}
+	<div class="form-input">
+		<input name="search_text" type="search" placeholder="Search...">
+		<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+
+		
+	</div>
+</form>
+
+<form action="{% url 'home' %}" method ="GET" >
+	<div class="select" >
+	  <select name="subjected" id="format" onchange="this.form.submit()">
+		{% for sub in subjects %}
+		{% if sub.subject == subjects_selected %}
+		<option value="{{sub.subject}}" selected>{{sub.subject}}</option>
+		{% else %}
+		<option value="{{sub.subject}}">{{sub.subject}}</option>
+		{% endif %}
+		{% endfor %}
+	  </select>
+	</div>
+  </form>
+
+{% endblock %}
+
 {% block content %}
 
 {% if subjects %}
@@ -44,19 +71,6 @@
 	</a>
 </div>
 
-<form action="{% url 'home' %}" method ="GET" >
-	<div class="select" >
-	  <select name="subjected" id="format" onchange="this.form.submit()">
-		{% for sub in subjects %}
-		{% if sub.subject == subjects_selected %}
-		<option value="{{sub.subject}}" selected>{{sub.subject}}</option>
-		{% else %}
-		<option value="{{sub.subject}}">{{sub.subject}}</option>
-		{% endif %}
-		{% endfor %}
-	  </select>
-	</div>
-  </form>
 
 <ul class="box-info">
 	<li>

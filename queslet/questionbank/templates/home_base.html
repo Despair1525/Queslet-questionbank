@@ -30,18 +30,12 @@
 		<!-- CONTENT -->
 		<section id="content">
 			<!-- NAVBAR -->
+			
 			<nav>
 				<i class='bx bx-menu'></i>
-
-				<form action= "{% url 'search_view' %}" method="get">
-					{% csrf_token %}
-					<div class="form-input">
-						<input name="search_text" type="search" placeholder="Search...">
-						<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
-
-						<i class='bx bx-filter'></i>
-					</div>
-				</form>
+				{% block subjectFilter %}
+				
+						{% endblock %}
 
 
 				{% comment %} <input type="checkbox" id="switch-mode" hidden>
