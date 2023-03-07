@@ -28,6 +28,57 @@
 {% endblock %}
 
 {% block content %}
+<div class="head">
+	<h3>Manage access</h3>
+</div>
 
-
+<div class="table-data-manage table-wrapper">
+	<div class="order">
+		
+		<form action="{% url 'manage' %}" method="post">
+			{% csrf_token %}
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					{% for subject in subjectLst %}
+					<th>{{subject}}</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+				<th>Teachers</th>
+				<th></th>
+				</tr>
+				{% for teacher in teacherList %}
+				<tr> 
+					<td>{{teacher}}</td>
+					
+				{% for subject in subjectLst %}
+					<td>
+						<label class="container">
+						<input type="checkbox" id="{{teacher}}-{{subject.subject}}" name="{{teacher}}-{{subject}}" value="{{teacher}}-{{subject}}"
+						{% for k,v in access.items %}
+						{% if subject in v and k == teacher  %} checked 
+					{% endif %}
+						{% endfor %}
+						>
+						<span class="checkmark"></span>
+					</label>
+					</td>
+					{% endfor %}
+				</tr>
+					{% endfor %}
+			</tbody>
+		</table>
+		<div class="row">
+			<input type="submit" value="Submit">
+		  </div>
+	</form>
+</div>
+</div>
+{% if messages %} {% for message in messages %}
+          <div class="alert-success">{{message}}</div>
+          {% endfor %} {% endif %}
 {% endblock%}

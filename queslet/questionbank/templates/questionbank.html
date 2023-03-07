@@ -82,13 +82,10 @@
 	</li>
 </ul>
 
-
-<div class="table-data">
+<div class ="table-container" >
+<div class="table-wrapper">
 	<div class="order">
-		<div class="head">
-			<h3>Questions</h3>
-
-		</div>
+		
 		<table>
 			<thead>
 				<tr>
@@ -110,7 +107,7 @@
 					<p>{{mcq.question}}</p>
 					{% endif %}
 				</td>
-				<td><span>
+				<td><span class="td-img">
 					{% if mcq.contain_img %}
 					<img class="mcq-img"  src= 'media/images/{{mcq.q_image}}'>
 					 {% endif %}
@@ -128,6 +125,7 @@
 		 <a href="{% url 'home' %}?page={{page|sub:1}}&subjected={{subjects_selected}}" class ="prev">< Prev</a> 
 		 <a href="{% url 'home' %}?page={{page|add:1}}&subjected={{subjects_selected}}" class ="prev" class ="next">Next ></a> 
 	</div>
+</div>
 </div>
 {% else %}
 <div class="head-title">

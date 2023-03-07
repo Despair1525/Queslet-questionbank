@@ -128,6 +128,7 @@
 							<div class="head">
 								<h3>Import mcqs</h3>
 							</div>
+
 							<form action ="{% url 'import_view' %}" method ="post">
 								{% csrf_token %}
 							<ul class="todo-list">
@@ -141,7 +142,10 @@
               					</li>
 								{% endfor %}
 							</ul>
+							<div class="row">
 							<input name="submit_import" type="submit" value="submit_import">
+
+						</div>
 						</form>
 						</div>
 				</div>

@@ -43,17 +43,15 @@ def home(request):
 
             have_img = result.filter(contain_img =True)
             page_num = request.GET.get('page',1)
-            p = Paginator(result,10)
-        
+            # p = Paginator(result,10)
+            # page_num = 1 if int(page_num) < 1 else int(page_num)
+            # page_num = p.num_pages if int(page_num) > p.num_pages else int(page_num)
 
-            page_num = 1 if int(page_num) < 1 else int(page_num)
-            page_num = p.num_pages if int(page_num) > p.num_pages else int(page_num)
-
-            page = p.page( page_num)
+            # page = p.page( page_num)
 
          
       
-            context ={"lst_mcqs":page,
+            context ={"lst_mcqs":result,
       "total":len(result),
       "num_img":len(have_img),
       "num_subject":len(subjects),
