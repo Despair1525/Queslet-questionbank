@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import home_view,mcq_view,search_view,import_view,manage_view
+from .views import home_view,mcq_view,search_view,import_view,manage_view,export_view
 
 urlpatterns = [
     path('',home_view.home,name="home"),
@@ -23,4 +23,5 @@ urlpatterns = [
     path('mcq/',mcq_view.mcq_view,name="mcq_view"),
     path('search/',search_view.search_view,name="search_view"),
     path('import/',import_view.import_view,name="import_view"),
+    path('export/',export_view.export,name="export_view"),
 ]

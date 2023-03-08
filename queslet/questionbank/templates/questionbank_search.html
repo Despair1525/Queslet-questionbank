@@ -1,150 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	{% load static %}
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- Boxicons -->
-	<link rel="icon" type="image/x-icon" href={% static "/img/ic_app.png" %}>
-	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-	<!-- My CSS -->
-	<link rel="stylesheet" href={% static 'css/style.css' %}>
-
-	<title>Queslet</title>
-</head>
-
-<body>
-
-	<div class="body-all">
-		<!-- SIDEBAR -->
-		<section id="sidebar" class="hide ">
-			<a href="{% url "home" %} " class="brand">
-				<img class="web-icon" src={% static 'img/ic_app.png' %} alt="Avatar" class="image">
-				<span class="text">Queslet</span>
-			</a>
-			<ul class="side-menu top">
-				<li class="active">
-					<a href="#">
-						<i class='bx bxs-dashboard'></i>
-						<span class="text">Questions bank</span>
-					</a>
-				</li>
-
-				<li>
-					<a href="#">
-						<i class='bx bxs-doughnut-chart'></i>
-						<span class="text">Analytics</span>
-					</a>
-				</li>
-
-			</ul>
-			<ul class="side-menu">
-				<li>
-					<a href="#">
-						<i class='bx bxs-cog'></i>
-						<span class="text">Settings</span>
-					</a>
-				</li>
-
-			</ul>
-		</section>
-		<!-- SIDEBAR -->
+{% extends "home_base.html" %}
 
 
+{% block subjectFilter %}
+<form action= "{% url 'search_view' %}" method="get">
+	<div class="form-input">
 
-		<!-- CONTENT -->
-		<section id="content">
-			<!-- NAVBAR -->
-			<nav>
-				<i class='bx bx-menu'></i>
-				
-				<form action={% url 'search_view' %} method="get">
-					{% csrf_token %}
-					<div class="form-input">
-						<input name="search_text" type="search" placeholder="Search...">
-						<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+		<input name="search_text" type="search" placeholder="Search..." value="{{search_query}}" >
+		<button type="submit"   class="search-btn" hidden   name="search-submit" value="{{subject_selected}}"><i class='bx bx-search'></i></button>
+	
+	</div>
+</form> 
 
-						<i class='bx bx-filter'></i>
-					</div>
-				</form>
+{% endblock %}
 
-
-				<input type="checkbox" id="switch-mode" hidden>
-				<label for="switch-mode" class="switch-mode"></label>
-
-
-			</nav>
-			<!-- NAVBAR -->
-
-			<!-- MAIN -->
-			<main>
-				<div class="head-title">
-					<div class="left">
-						<h1>Found {{ lst_mcqs|length }} Results</h1>
-
-					</div>
-					
-				</div>
-
-
-
-				<div class="table-data">
-					<div class="order">
-						<div class="head">
-							<h3>Questions</h3>
-
-						</div>
-						<table>
-							<thead>
-								<tr>
-									<th>Id</th>
-									<th>Question</th>
-									<th>Image</th>
-								</tr>
-							</thead>
-							<tbody>
-							
-							{% for mcq in lst_mcqs %}
-							<tr>
-								<td>
-									<a href="{% url "mcq_view" %}?mcq={{mcq.qid}}" >{{mcq.qid}}</a>
-								<td>
-									{% if  mcq.question == None %}
-									<p> Answer the question in images </p>
-									{% else %}
-									<p>{{mcq.question}}</p>
-									{% endif %}
-								</td>
-								<td><span>
-									{% if mcq.contain_img %}
-									<img class="mcq-img"  src= "../media/images/{{mcq.q_image}}">
-									 {% endif %}
-								</span></td>
-								</td>
-							</tr>
-
-							 {% endfor %}
-							</tbody>
-						</table>
-
-						<!-- https://pypi.org/project/django-mathfilters/-->
-						
-				</div>
-
-			</main>
-			<!-- MAIN -->
-
-		</section>
-		
-		
-
-		<!-- CONTENT -->
-		<script src={% static 'js/script.js' %}></script>
+{% block content %} 
+<div class="head-title">
+	<div class="left">
+		<h1>Found {{ lst_mcqs|length }} Results</h1>
 
 	</div>
+	
+</div>
+<div class="table-data">
+	<div class="order">
+		<div class="head">
+			<h3>Questions</h3>
 
-</body>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Question</th>
+					<th>Image</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+			{% for mcq in lst_mcqs %}
+			<tr>
+				<td>
+					<a href="{% url "mcq_view" %}?mcq={{mcq.qid}}" >{{mcq.qid}}</a>
+				<td>
+					{% if  mcq.question == None %}
+					<p> Answer the question in images </p>
+					{% else %}
+					<p>{{mcq.question}}</p>
+					{% endif %}
+				</td>
+				<td><span>
+					{% if mcq.contain_img %}
+					<img class="mcq-img"  src= "../media/images/{{mcq.q_image}}">
+					 {% endif %}
+				</span></td>
+				</td>
+			</tr>
 
-</html>
+			 {% endfor %}
+			</tbody>
+		</table>
+
+<!-- https://pypi.org/project/django-mathfilters/-->
+		
+</div>
+
+{% endblock %}
+
+
+		
+		

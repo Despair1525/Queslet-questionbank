@@ -369,7 +369,19 @@ body {
 	grid-gap: 10px;
 	font-weight: 500;
 }
-
+#content main .head-title .right .btn-upload{
+	display: inline;
+	margin : 10px;
+	height: 36px;
+	padding: 0 16px;
+	border-radius: 36px;
+	background: var(--theme);
+	color: var(--light);
+	justify-content: center;
+	align-items: center;
+	grid-gap: 10px;
+	font-weight: 500;
+}
 .btn-upload:hover span{
 	color:var(--theme-light);
 }
@@ -779,7 +791,27 @@ line-height: 50px;
 	 .select:hover::after {
 		color:var( --theme-light);
 	 }
-	
+	 .row input[type=submit]:hover {
+		background-color: var(--theme-light);
+	  }
+	.row  input[type=submit] {
+		background-color: var(--theme);
+		color: white;
+		padding: 12px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		float: right;
+		margin-top: 20px;
+		font-weight: bolder;
+	  }
+.export-form .row{
+	position: sticky;
+}
+	  .export-form .row input[type=submit]{
+		float: none;
+		margin-bottom: 10px;
+	  }
 
 	 .row input[type=submit]:hover {
 		background-color: var(--theme-light);
@@ -949,14 +981,19 @@ line-height: 50px;
 /* start: Table */
 .table-wrapper {
     max-height: 540px;
-    overflow: auto;
+    overflow: scroll;
     position: relative;
 }
+
+
 
 .table-wrapper .table {
     border-collapse: collapse;
     width: 100%;
     min-width: 800px;
+}
+.table-wrapper .rowExport{
+	position: sticky;
 }
 
 .table-wrapper thead {
@@ -966,6 +1003,10 @@ line-height: 50px;
     top: 0;
 	border-radius: 20px;
 }
+
+
+
+
 
 .table-wrapper td,th {
     padding: 8px 16px;

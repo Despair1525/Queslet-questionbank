@@ -1,0 +1,119 @@
+{% extends "home_base.html" %}
+ {% block activeExport %} class='active'
+ {% endblock %}
+
+ {% block subjectFilter %}
+
+ <form action="{% url 'export_view' %}" method ="GET" >
+	<div class="select" >
+	  <select name="subject" id="format" onchange="this.form.submit()">
+		{% for sub in subjects %}
+		{% if sub.subject == subjects_selected %}
+		<option value="{{sub.subject}}" selected>{{sub.subject}}</option>
+		{% else %}
+		<option value="{{sub.subject}}">{{sub.subject}}</option>
+		{% endif %}
+		{% endfor %}
+	  </select>
+	</div>
+  </form>
+
+ {% endblock %}
+{% block content %}
+
+<div class="head-title">
+    <div class="left">
+        <h1>Choose import question</h1>
+    </div>
+</div>
+
+<ul class="box-info">
+    <li>
+        <i class='bx bxs-bank'></i>
+        <span class="text">
+            <h3>{{total}}</h3>
+            <p>Total questions</p>
+        </span>
+    </li>
+    <li>
+        <i class='bx bx-image'></i>
+        <span class="text">
+            <h3>{{num_img}}</h3>
+            <p>Image questions</p>
+        </span>
+    </li>
+    <li>
+        <i class='bx bx-category'></i>
+        <span class="text">
+            <h3>{{num_subject}}</h3>
+            <p>Subjects</p>
+        </span>
+    </li>
+</ul>
+
+    <div class="order">
+        
+        <form class="export-form" action="" method=POST>
+            {% csrf_token %}
+            
+
+        
+<div class ="table-container" >
+    <div class="row" > 
+        <input  type="submit" value="Export question">
+        <input hidden type="text" value={{subjects_selected}} name="subjects_selected">
+        {% if messages %}
+<ul class="messages">
+{% for message in messages %}
+<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+    </div>
+    <div class="table-wrapper">
+        <table id = "questable" name = "questable">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">
+                        <input type = "checkbox" id = "select-all" name = "select-all" onClick="toggle(this)">
+                        <label for="select-all">Select All</label>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            
+            {% for mcq in lst_mcqs %}
+            <tr>
+                <td>
+                    <a href="{% url "mcq_view" %}?mcq={{mcq.qid}}">{{mcq.qid}}</a>
+                <td>
+                    {% if  mcq.question == None %}
+                    <p> Answer the question in images </p>
+                    {% else %}
+                    <p>{{mcq.question}}</p>
+                    {% endif %}
+                </td>
+                <td><span>
+                    {% if mcq.contain_img %}
+                    <img class="mcq-img"  src= '../media/images/{{mcq.q_image}}'>
+                     {% endif %}
+                </span></td>
+                <td>
+                    <input type="checkbox" value="{{mcq.qid}}" name = "checkbox">
+                </td>
+                </td>
+            </tr>
+
+             {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- https://pypi.org/project/django-mathfilters/-->
+</div>
+</div>
+{% endblock %}

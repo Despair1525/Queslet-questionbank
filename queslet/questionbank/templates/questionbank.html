@@ -6,7 +6,6 @@ class =  "active"
 
 {% block subjectFilter %}
 <form action= "{% url 'search_view' %}" method="get">
-	{% csrf_token %}
 	<div class="form-input">
 		<input name="search_text" type="search" placeholder="Search...">
 		<button type="submit"   class="search-btn"   hidden name="search-submit" value="{{subjects_selected}}"><i class='bx bx-search'></i></button>
@@ -17,7 +16,7 @@ class =  "active"
 
 <form action="{% url 'home' %}" method ="GET" >
 	<div class="select" >
-	  <select name="subjected" id="format" onchange="this.form.submit()">
+	  <select name="subject" id="format" onchange="this.form.submit()">
 		{% for sub in subjects %}
 		{% if sub.subject == subjects_selected %}
 		<option value="{{sub.subject}}" selected>{{sub.subject}}</option>
@@ -40,10 +39,17 @@ class =  "active"
 		<h1>Questions bank</h1>
 
 	</div>
-	<a href="{% url 'import_view' %}?subject={{subjects_selected}}" class="btn-upload">
+<div class="right"> 
+	<a href="{% url 'export_view' %}?subject={{subjects_selected}}" class="btn-upload">
+		<i class='bx bxs-cloud-download'></i>
+		<span class="text">Export questions</span>
+	</a>
+
+	<a href="{% url 'import_view' %}?subject={{subjects_selected}}" class=" right btn-upload">
 		<i class='bx bxs-cloud-upload'></i>
 		<span class="text">Import questions</span>
 	</a>
+</div>
 </div>
 
 
@@ -110,10 +116,7 @@ class =  "active"
 
 		<!-- https://pypi.org/project/django-mathfilters/-->
 	{% load mathfilters %}
-	<div class="pageBody">
-		 <a href="{% url 'home' %}?page={{page|sub:1}}&subjected={{subjects_selected}}" class ="prev">< Prev</a> 
-		 <a href="{% url 'home' %}?page={{page|add:1}}&subjected={{subjects_selected}}" class ="prev" class ="next">Next ></a> 
-	</div>
+	
 </div>
 </div>
 {% else %}

@@ -24,7 +24,8 @@ conn = connector()
 
 @csrf_exempt 
 def search_view(request):
-
+    search_text =""
+    subject_selected=""
     if request.method =="GET":
         if request.GET.get("search_text") != None:
             
@@ -37,8 +38,13 @@ def search_view(request):
 
             print(search_result)
             #get List mcqs 
-            list_id = [d["id"] for d in search_result["matches"] if d["score"] >= 0.23] 
+            list_result  = {d["id"]:d['score'] for d in search_result["matches"] if d["score"] >= 0.23}
+            # print(list_result)
+
+            list_id = list_result.keys()
 
             result_found =  Mcq.objects.filter(pk__in= list_id)
-    context={"lst_mcqs":result_found} 
+            result_found = sorted(result_found, key= lambda i: list_result[i.qid],reverse=True)
+            
+    context={"lst_mcqs":result_found,"search_query":search_text,"subject_selected":subject_selected} 
     return render(request, 'questionbank_search.html',context)
