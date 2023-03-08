@@ -18,6 +18,7 @@ import easyocr
 from PIL import Image
 
 import torch
+import numpy as np
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import SentenceTransformer, util
 from ..Dbcontext import connector
@@ -178,7 +179,6 @@ def import_view(request):
             pairs = cosin_pair(mcq_lst_encode)
             for pair in pairs:
                 i, j = pair['index']
-
                 temp_mcq = mcqs_set[mcq_lst[i]]
                 # print("temp_mcq",temp_mcq)
                 duplicate_mcq.append((temp_mcq,[(mcq_lst[j],pair['score'])]))
@@ -237,10 +237,9 @@ def cosin_pair(encode):
   for i in range(len(cosine_scores)-1):
     for j in range(i+1, len(cosine_scores)):
         # Compare thresh hold 
-        score = cosine_scores[i][j].values
-        
-        # if cosine_scores[i][j] >= 0.75:
-        pairs.append({'index': [i, j], 'score': score})
+        score = np.array(cosine_scores[i][j])
+        if cosine_scores[i][j] >= 0.75:
+            pairs.append({'index': [i, j], 'score': score})
 
   #Sort scores in decreasing order
   pairs = sorted(pairs, key=lambda x: x['score'], reverse=True)
