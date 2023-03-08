@@ -20,7 +20,9 @@ def get_context(request):
         subjects_access = SubjectAccess.objects.filter(teacher=User.   username)
         subjects = [sub.subject for sub in subjects_access]
         if len(subjects) == 0:
-            return render(request, 'questionbank.html',{"subjects":subjects,"isManager" :isManager})
+            context = {"subjects":subjects,"isManager" :isManager}
+            
+            return context
         subjects_name = [sub.subject.subject for sub in subjects_access][0]
     else:
         subjects = Subject.objects.all()

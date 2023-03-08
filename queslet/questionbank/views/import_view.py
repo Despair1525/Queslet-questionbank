@@ -19,6 +19,7 @@ from PIL import Image
 
 import torch
 from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, util
 from ..Dbcontext import connector
 from.home_view import home
 #regex find image_path 
@@ -141,7 +142,10 @@ def import_view(request):
 
                     # print("Image_path:",file_url)
             duplicate_mcq =[]
+            num_dup = 0
             mcqs_set={}
+            mcq_lst = []
+            mcq_lst_encode = []
             for key in list_docx.keys():
                 for mcq in list_docx[key]:
                     #store in session 
@@ -156,23 +160,37 @@ def import_view(request):
 
                         # print(mcq_form)
                     encode = SbertModel.encode(str(mcq_form)).tolist()
+                    print(str(mcq.subject).strip())
                     result = conn.query_mcqs_encode(encode,str(mcq.subject).strip(),k=5)
 
                         # Filter dictionary by keeping elements whose keys are divisible by 2
                     list_id_dup = [ (d["id"],d["score"]) for d in result["matches"] if d["score"] >= 0.75] 
                     if len(list_id_dup) != 0:
+
                         duplicate_mcq.append((mcq,list_id_dup))
+                        num_dup += len(list_id_dup)
 
-                    mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":mcq.subject,"haveImage":mcq.contain_img,"encode":encode} 
+                    mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":mcq.subject,"haveImage":mcq.contain_img,"encode":encode,"qid":mcq.qid} 
+                    mcq_lst.append(mcq.qid)
+                    mcq_lst_encode.append(encode)
+            
 
-            # print("total images",len(list_images))
-            # print(list_images)
+            pairs = cosin_pair(mcq_lst_encode)
+            for pair in pairs:
+                i, j = pair['index']
+
+                temp_mcq = mcqs_set[mcq_lst[i]]
+                # print("temp_mcq",temp_mcq)
+                duplicate_mcq.append((temp_mcq,[(mcq_lst[j],pair['score'])]))
+                num_dup += 1
+
+                print("{} \t\t {} \t\t Score: {:.4f}".format(mcq_lst[i], mcq_lst[j], pair['score']))
+
             request.session['temp_mcq'] = mcqs_set
             print("import length:",len(mcqs_set))
-            # test_dct = request.session['temp_mcq']
-            # print(test_dct)
-            # print(mcqs_set)
-            return render(request, 'import.html',{'dup_result':duplicate_mcq})
+            # print("import length:",mcqs_set)
+     
+            return render(request, 'import.html',{'dup_result':duplicate_mcq,"num_dup":num_dup})
     else:
          #authen the subject import 
         subjectImport = request.GET.get("subject")
@@ -210,6 +228,23 @@ def authenUserSubject(subject,Teacher):
     except:
         print("Cant not find Access")
         return False 
+
+
+def cosin_pair(encode):
+  cosine_scores = util.cos_sim(encode, encode)
+  pairs = []
+
+  for i in range(len(cosine_scores)-1):
+    for j in range(i+1, len(cosine_scores)):
+        # Compare thresh hold 
+        score = cosine_scores[i][j].values
+        
+        # if cosine_scores[i][j] >= 0.75:
+        pairs.append({'index': [i, j], 'score': score})
+
+  #Sort scores in decreasing order
+  pairs = sorted(pairs, key=lambda x: x['score'], reverse=True)
+  return pairs
 
 
 def ocr2Text(file):
