@@ -28,7 +28,7 @@ img_regex = "(?<=\[file: ).+?(?=\])"
 ques_regex = "(\[file:).*?(\])"
 op_regex = "([a-zA-Z]\.)"
 
-#Easy OCR 
+# Easy OCR 
 reader = easyocr.Reader(['en','vi'])
 
 print("Connecting to pinecone")

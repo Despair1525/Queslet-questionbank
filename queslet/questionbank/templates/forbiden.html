@@ -1,0 +1,15 @@
+{% extends "home_base.html" %} {% block content %} {% load static %}
+
+<div class="forbiden">
+  <img src="{% static "/img/forbidden.png" %}">
+  <h1>ACCESS DENIED</h1>
+  <p>You dont't have access to this page</p>
+  <div class="bttn">
+    <a href="{% url 'home' %}" class="btn-upload">
+      <i class="bx bxs-home"></i>
+      <span class="text">Go Home</span>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

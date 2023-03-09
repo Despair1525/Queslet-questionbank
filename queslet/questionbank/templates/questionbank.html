@@ -120,13 +120,13 @@ class =  "active"
 </div>
 </div>
 {% else %}
-<div class="head-title">
-	<div class="left">
-		<h1>You are not assinged any subjects</h1>
 
-	</div>
-
-</div>
+<div class="forbiden">
+	<img src="{% static "/img/not_assign.png" %}">
+  
+	<h1>You are not assigned any subject</h1>
+	
+  </div>
 
 {% endif %}
 {% endblock%}

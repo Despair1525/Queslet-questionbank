@@ -35,7 +35,6 @@ def get_context(request):
 
     if subjects_name_select in subjects_access_name:
         subjects_name = subjects_name_select
-            
     result = result.filter(subject=subjects_name)
     print(subjects)
     have_img = result.filter(contain_img =True)
@@ -55,8 +54,8 @@ def get_context(request):
 
 
 def home(request):
-      if not request.user.is_authenticated:
-         return redirect('login')
+    #   if not request.user.is_authenticated:
+    #      return redirect('login')
       
       if request.method == "GET":
             context = get_context(request=request)

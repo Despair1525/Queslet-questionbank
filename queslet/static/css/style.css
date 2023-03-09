@@ -328,6 +328,9 @@ body {
 	max-height: calc(100vh - 56px);
 	overflow-y: auto;
 }
+.head-manage{
+	margin-top: 50px;
+}
 #content main .head-title {
 	display: flex;
 	align-items: center;
@@ -1080,4 +1083,58 @@ font-size: 20px;
 .table-data-manage table td {
   padding: 10px;
 }
+.forbiden{
+	text-align: center;
+	font-family: var(--poppins) ;
+}
+.forbiden h1{
+	font-weight: bold;
+	font-size: 50px;
+	margin-bottom: 15px;
+	color: var(--theme);
+}
+.forbiden p {
 
+	color: var(--grey-dark);
+	margin-bottom: 10px;
+}
+.bttn{
+	margin-bottom: 50px;
+	margin-right: 20px;
+	display: inline;
+}
+.bttn a {
+	background: var(--theme-light);
+	padding: 10px;
+	font-size: 20px;
+	border-radius: 20px;
+	border: 1px var(--grey);
+	color: white;
+}
+.bttn a:hover{
+	background: var(--theme);
+	color: var(--grey-dark);
+
+}
+.group-bttn {
+	display: inline;
+}
+.forbiden a{
+	background: var(--theme-light);
+	padding: 10px;
+	font-size: 20px;
+	border-radius: 20px;
+	border: 1px var(--grey);
+	color: white;
+}
+
+.forbiden a:hover{
+	background: var(--theme);
+	color: var(--dark);
+
+}
+.forbiden img {
+width: 60%;
+height: 60%;
+
+}

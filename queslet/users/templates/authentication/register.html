@@ -26,53 +26,6 @@
         {% endif %} {{form.as_p}}
 
         <button type="submit" class="btn-submit">Register</button>
-
-        {% comment %}
-        <div class="form-group">
-          <label for="username">username</label>
-          <div class="input-group">
-            <input
-              type="text"
-              name="username"
-              id="username"
-              placeholder="Username"
-            />
-            {% endcomment %} {% comment %} <i class="bx bx-user"></i>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <div class="input-group">
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Your password"
-            />
-            <i class="bx bx-lock-alt"></i>
-          </div>
-          <span class="help-text">At least 8 characters</span>
-        </div>
-        <div class="form-group">
-          <label for="confirm-pass">Confirm password</label>
-          <div class="input-group">
-            <input
-              type="password"
-              id="confirm-pass"
-              placeholder="Enter password again"
-            />
-            <i class="bx bx-lock-alt"></i>
-          </div>
-          <span class="help-text"
-            >Confirm password must be same with password</span
-          >
-        </div>
-        <button type="submit" class="btn-submit">Register</button>
-        <p>
-          I already have an account.
-          <a href="#" onclick="switchForm('login', event)">Login</a>
-        </p>
-        {% endcomment %}
       </form>
     </div>
   </body>
