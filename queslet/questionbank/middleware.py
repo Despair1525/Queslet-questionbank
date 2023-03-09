@@ -22,6 +22,11 @@ class LoginRequiredMiddleware:
         if not request.user.is_authenticated :
             return redirect('/users/login_user')
         else: 
+            if request.user.username == "admin":
+                if "admin" in path:
+                    return response
+                return redirect('/admin/')
+
             return response
         
 class ManagerMiddleware:

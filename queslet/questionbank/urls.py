@@ -25,5 +25,6 @@ urlpatterns = [
     path('import/',import_view.import_view,name="import_view"),
     path('export/',export_view.export,name="export_view"),
     path('forbiden/',forbiden_view.forbiden,name="forbiden"),
+    # path('admin/', admin.site.urls,name="admin"),
 ]
 
