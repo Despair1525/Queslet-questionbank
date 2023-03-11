@@ -51,7 +51,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'questionbank.middleware.LoginRequiredMiddleware',
-    'questionbank.middleware.ManagerMiddleware'
+    'questionbank.middleware.ManagerMiddleware',
+    'questionbank.middleware.ImportMiddleware'
+
 ]
 
 ROOT_URLCONF = 'queslet.urls'
@@ -59,7 +61,7 @@ ROOT_URLCONF = 'queslet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

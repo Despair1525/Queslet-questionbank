@@ -7,6 +7,8 @@ from django.core.files.storage import default_storage
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.contrib.auth import login
+
 from ..models.models import Mcq,Subject,SubjectAccess
 from ..ultils import isManger
 from docx import Document
@@ -22,7 +24,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import SentenceTransformer, util
 from ..Dbcontext import connector
-from.home_view import home
+
 #regex find image_path 
 img_regex = "(?<=\[file: ).+?(?=\])"
 ques_regex = "(\[file:).*?(\])"
@@ -39,87 +41,23 @@ print("Device:",device)
 print("Loading SBert Model ")
 SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
 
-#Sbert 
+# #Sbert 
 
 def import_view(request):
+   
 
-    if request.method == "POST":
-
+    if request.method == "POST" :
         if 'submit_import' in request.POST:
-            checked_items = request.POST.getlist("check_import")
-            #show import mcq
-            print(checked_items)
-            print("--------------------------")
-            temp_dct = request.session['temp_mcq']
-
-            currentUser = request.user
-
-            for key_mcq in checked_items:
-                mcq = temp_dct[key_mcq]
-                encode = mcq["encode"]
-                subject = mcq["subject"]
-                #generate new id
-                user_name = request.user.username
-                new_id = subject+"-"+user_name+"-"+get_time()
-                #get attr
-                question = mcq["question"]
-                options = mcq["options"]
-                answer = mcq["answer"]
-                haveImage = mcq["haveImage"]
-
-                if haveImage:
-                    images = new_id+".png"
-                    temp_path = "media/temp/"+mcq["image"]
-                    image_path = "media/images/"+images
-                    new_path = "images/"+images
-                    shutil.move(temp_path, image_path)
-
-                    save_mcq= Mcq( 
-                        qid =  new_id,
-                        question = question,
-                        options = options,
-                        q_image = images,
-                        answer_q = answer,
-                        subject = subject,
-                        contain_img = haveImage,
-                        img_file = new_path ,
-                        user = currentUser
-                        )
-                    # save_mcq.save()
-                else:
-                    save_mcq= Mcq( 
-                        qid =  new_id,
-                        question = question,
-                        options = options,
-                        answer_q = answer,
-                        subject = subject,
-                        contain_img = haveImage,
-                        user = currentUser
-                         )
-                    images = ""
-                    
-                # save into database
-                save_mcq.save()
-                print("Import Mcq success !")
-                print(save_mcq.subject)
-                print(save_mcq.user)
-
-                # save into Pinecone
-                result = conn.upload(qid=new_id,encode=encode,question=question,contain=haveImage,q_image=images,subject=subject)
-                print(result)
-            # Remove file in temp 
-
-            shutil.rmtree('media/temp')
-
-            return redirect(home)
+            request.session['forward'] = False
+            return submit_import(request)
         else:
-            
             #Import
             form = UploadFileForm(request.POST,request.FILES)
             files = request.FILES.getlist('file')
             list_docx={}
             list_images={} 
             importSubject = request.session['subjectImport']
+            #validate and report:
             #Load Images and docx file  
             for file in files:
                 name_file,ex = os.path.splitext(str(file))
@@ -135,47 +73,50 @@ def import_view(request):
                     # print("Total questions:",len(doc.tables))
                 else:
                     list_images[str(file)] = file
+                    print(str(file))
                     save_path = "temp/"+file.name
                     default_storage.save(save_path, file)
                     
                     #reading Url 
                     # file_url = default_storage.url(save_path)
-
                     # print("Image_path:",file_url)
             duplicate_mcq =[]
             num_dup = 0
             mcqs_set={}
             mcq_lst = []
             mcq_lst_encode = []
+            not_found = []
+
             for key in list_docx.keys():
                 for mcq in list_docx[key]:
                     #store in session 
-                   
                     print(mcq.qid)
                     mcq_image_text =""
-                    
                     if mcq.contain_img:
-                        file_img = list_images[mcq.q_image]
-                        mcq_image_text = ocr2Text(file_img)
-                    mcq_form = mcq.getMcq(mcq_image_text)
+                        try:
+                            file_img = list_images[mcq.q_image]
+                            mcq_image_text = ocr2Text(file_img)
+                        except:
+                            print("NOT FOUNd:",mcq.q_image)
+                            mcq_image_text=""
+                            not_found.append(mcq.q_image)
 
+                    mcq_form = mcq.getMcq(mcq_image_text)
                         # print(mcq_form)
+
                     encode = SbertModel.encode(str(mcq_form)).tolist()
                     print(str(mcq.subject).strip())
                     result = conn.query_mcqs_encode(encode,str(mcq.subject).strip(),k=5)
-
                         # Filter dictionary by keeping elements whose keys are divisible by 2
                     list_id_dup = [ (d["id"],d["score"]) for d in result["matches"] if d["score"] >= 0.75] 
                     if len(list_id_dup) != 0:
-
                         duplicate_mcq.append((mcq,list_id_dup))
                         num_dup += len(list_id_dup)
-
                     mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":mcq.subject,"haveImage":mcq.contain_img,"encode":encode,"qid":mcq.qid} 
                     mcq_lst.append(mcq.qid)
                     mcq_lst_encode.append(encode)
-            
 
+                
             pairs = cosin_pair(mcq_lst_encode)
             for pair in pairs:
                 i, j = pair['index']
@@ -183,15 +124,14 @@ def import_view(request):
                 # print("temp_mcq",temp_mcq)
                 duplicate_mcq.append((temp_mcq,[(mcq_lst[j],pair['score'])]))
                 num_dup += 1
-
                 print("{} \t\t {} \t\t Score: {:.4f}".format(mcq_lst[i], mcq_lst[j], pair['score']))
 
             request.session['temp_mcq'] = mcqs_set
             print("import length:",len(mcqs_set))
-            # print("import length:",mcqs_set)
-     
-            return render(request, 'import.html',{'dup_result':duplicate_mcq,"num_dup":num_dup})
+            # print("import length:",mcqs_set)     
+            return render(request, 'import.html',{'dup_result':duplicate_mcq,"num_dup":num_dup,"not_found":not_found})
     else:
+
          #authen the subject import 
         subjectImport = request.GET.get("subject")
         currentUser = request.user
@@ -203,9 +143,75 @@ def import_view(request):
 
         request.session['subjectImport'] =  subjectImport
         form = UploadFileForm()
+        request.session['forward'] = True
     return render(request, 'import.html',{'form':form,'subjectImport':subjectImport})
 
 
+
+def submit_import(request):
+    checked_items = request.POST.getlist("check_import")
+    #show import mcq
+    print(checked_items)
+    print("--------------------------")
+    temp_dct = request.session['temp_mcq']
+    currentUser = request.user
+     
+    for key_mcq in checked_items:
+        mcq = temp_dct[key_mcq]
+        encode = mcq["encode"]
+        subject = mcq["subject"]
+        #generate new id
+        user_name = request.user.username
+        new_id = subject+"-"+user_name+"-"+get_time()
+        #get attr
+        question = mcq["question"]
+        options = mcq["options"]
+        answer = mcq["answer"]
+        haveImage = mcq["haveImage"]
+        if haveImage:
+            images = new_id+".png"
+            temp_path = "media/temp/"+mcq["image"]
+            image_path = "media/images/"+images
+            new_path = "images/"+images
+            shutil.move(temp_path, image_path)
+            save_mcq= Mcq( 
+                        qid =  new_id,
+                        question = question,
+                        options = options,
+                        q_image = images,
+                        answer_q = answer,
+                        subject = subject,
+                        contain_img = haveImage,
+                        img_file = new_path ,
+                        user = currentUser
+                        )
+                    # save_mcq.save()
+        else:
+            save_mcq= Mcq( 
+                        qid =  new_id,
+                        question = question,
+                        options = options,
+                        answer_q = answer,
+                        subject = subject,
+                        contain_img = haveImage,
+                        user = currentUser
+                         )
+            images = ""
+                    
+        # save into database
+        save_mcq.save()
+        print("Import Mcq success !")
+        print(save_mcq.subject)
+        print(save_mcq.user)
+        # save into Pinecone
+        result = conn.upload(qid=new_id,encode=encode,question=question,contain=haveImage,q_image=images,subject=subject)
+        print(result)
+            # Remove file in temp 
+    shutil.rmtree('media/temp')
+    User = request.user
+    # request.session.flush()
+    # login(User)
+    return redirect('home')
 
 def authenUserSubject(subject,Teacher):
     print("Import subject",subject)

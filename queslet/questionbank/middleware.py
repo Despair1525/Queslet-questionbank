@@ -12,11 +12,12 @@ class LoginRequiredMiddleware:
         # One-time configuration and initialization.
     def __call__(self, request):
 
+
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         path = request.path
         response = self.get_response(request)
-        if path == '/users/login_user' :
+        if path == '/users/login_user':
             return response
 
         if not request.user.is_authenticated :
@@ -36,8 +37,8 @@ class ManagerMiddleware:
     def __call__(self, request):
 
         # Code to be executed for each request before
-        # the view (and later middleware) are called.
-
+            # the view (and later middleware) are called.
+        
         manager_paths = ["register_user","manage"]
         User = request.user
         path = request.path
@@ -47,6 +48,35 @@ class ManagerMiddleware:
             if isManger(User) :
                 return response
             return redirect('forbiden')
+        else: 
+            return response
+
+class ImportMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+    def __call__(self, request):
+
+        # Code to be executed for each request before
+        # the view (and later middleware) are called.
+
+        import_paths = ["import"]
+        User = request.user
+        path = request.path
+        response = self.get_response(request)
+        print("Go in import")
+        if any( item in path for item in import_paths):
+            
+            try:
+                forward = request.session['forward'] 
+            except:
+                forward = False
+
+            if forward:
+                return response
+            else:
+                request.session['forward'] = True
+                return redirect('import_view')
         else: 
             return response
 

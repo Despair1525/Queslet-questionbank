@@ -24,6 +24,8 @@ def login_users(request):
             #rediracnt to main page
             return redirect('home')
         else:
+
+            
             #return an "invalid login"
             messages.success(request,("User or password not valid"))
             return redirect('login')

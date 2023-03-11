@@ -9,12 +9,34 @@
     <link rel="stylesheet" href="{% static 'css/auth_style.css' %}" />
     <!-- Fontawesome CDN Link -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Queslet</title>
+    <link rel="icon" type="image/x-icon" href={% static "/img/ic_app.png" %}>
+
     <link
       href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
       rel="stylesheet"
     />
   </head>
   <body>
+    {% if user.is_authenticated %}
+
+    <div class="container">
+      <form action="{% url 'login' %}" method="post" class="login active">
+        {% csrf_token %}
+        <img src="{% static 'img/ic_app.png' %} " />
+        <h1 class="title">
+          You are already login
+
+          <div class="bttn">
+            <a href="{% url 'logout' %}" class="btn-upload">
+              <span class="text">Logout</span>
+            </a>
+          </div>
+        </h1>
+      </form>
+    </div>
+
+    {% else %}
     <div class="container">
       <form action="{% url 'login' %}" method="post" class="login active">
         {% csrf_token %}
@@ -54,5 +76,7 @@
         <button type="submit" class="btn-submit">Login</button>
       </form>
     </div>
+
+    {% endif %}
   </body>
 </html>

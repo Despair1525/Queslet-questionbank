@@ -53,6 +53,8 @@ def get_context(request):
     
 
 
+
+
 def home(request):
     #   if not request.user.is_authenticated:
     #      return redirect('login')

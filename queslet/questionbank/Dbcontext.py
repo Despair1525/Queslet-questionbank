@@ -43,7 +43,7 @@ class connector():
 
         row =[ (qid,list(encode),{'question':str(question),'contain_images':contain,'image':str(q_image)})]
 
-        print(row)
+        # print(row)
 
         try:
             result = self.index.upsert(row,namespace=subject)

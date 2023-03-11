@@ -1138,3 +1138,8 @@ width: 60%;
 height: 60%;
 
 }
+
+main .alert-warning{
+	font-size: 16px;
+	color: var(--red);
+}
