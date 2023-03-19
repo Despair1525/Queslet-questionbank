@@ -16,14 +16,14 @@ class SubjectAccess(models.Model):
                 fields=['teacher', 'subject'], name='unique_teacher_subject_combination'
             )
         ]
-
+# 'question','options','answer_q','subject','contain_img','img_file'
 class Mcq(models.Model):
-    qid = models.TextField(primary_key=True)
+    qid = models.CharField(primary_key=True,max_length=100)
     question = models.TextField(null= True, blank= True)
-    options = models.TextField()
-    q_image =models.TextField(null= True, blank= True)
-    answer_q = models.TextField(null= True, blank= True)
-    subject = models.TextField()
+    options = models.CharField(max_length=1000)
+    q_image =models.CharField(null= True, blank= True,max_length=500)
+    answer_q = models.CharField(null= True, blank= True,max_length=500)
+    subject = models.ForeignKey(Subject, to_field="subject",on_delete=models.CASCADE)
     contain_img = models.BooleanField()
     img_file = models.ImageField(null= True, blank= True, upload_to="images/")
 

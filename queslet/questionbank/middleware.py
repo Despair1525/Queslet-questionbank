@@ -39,7 +39,7 @@ class ManagerMiddleware:
         # Code to be executed for each request before
             # the view (and later middleware) are called.
         
-        manager_paths = ["register_user","manage"]
+        manager_paths = ["register_user","manage","edit_mcq",'import']
         User = request.user
         path = request.path
         response = self.get_response(request)
@@ -64,7 +64,6 @@ class ImportMiddleware:
         User = request.user
         path = request.path
         response = self.get_response(request)
-        print("Go in import")
         if any( item in path for item in import_paths):
             
             try:

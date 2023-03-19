@@ -31,15 +31,15 @@ ques_regex = "(\[file:).*?(\])"
 op_regex = "([a-zA-Z]\.)"
 
 # Easy OCR 
-reader = easyocr.Reader(['en','vi'])
+# reader = easyocr.Reader(['en','vi'])
 
-print("Connecting to pinecone")
-conn = connector()
+# print("Connecting to pinecone")
+# conn = connector()
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print("Device:",device)
-print("Loading SBert Model ")
-SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# print("Device:",device)
+# print("Loading SBert Model ")
+# SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
 
 # #Sbert 
 
@@ -76,7 +76,6 @@ def import_view(request):
                     print(str(file))
                     save_path = "temp/"+file.name
                     default_storage.save(save_path, file)
-                    
                     #reading Url 
                     # file_url = default_storage.url(save_path)
                     # print("Image_path:",file_url)

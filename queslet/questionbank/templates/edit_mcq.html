@@ -1,0 +1,23 @@
+{% extends "home_base.html" %} {% block content %}
+<div class="head-title">
+  <div class="left">
+    <h1>Edit question: {{mcq_id}}</h1>
+  </div>
+</div>
+
+<div class="table-data">
+  <div class="order">
+    <form
+      action="{% url 'edit' %}"
+      method="POST"
+      class="McqForm"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %} {{form.as_p}}
+      <input hidden readonly name="qid" value="{{mcq_id}}" />
+
+      <input type="submit" name="submit" />
+    </form>
+  </div>
+</div>
+{% endblock %}

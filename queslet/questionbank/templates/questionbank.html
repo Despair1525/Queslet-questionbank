@@ -44,11 +44,12 @@ class =  "active"
 		<i class='bx bxs-cloud-download'></i>
 		<span class="text">Export questions</span>
 	</a>
-
+	{% if request.user|has_group:"manager" %}
 	<a href="{% url 'import_view' %}?subject={{subjects_selected}}" class=" right btn-upload">
 		<i class='bx bxs-cloud-upload'></i>
 		<span class="text">Import questions</span>
 	</a>
+	{%endif%}
 </div>
 </div>
 

@@ -3,6 +3,14 @@
   <div class="left">
     <h1>question: {{mcqs.0.qid}}</h1>
   </div>
+  {% if request.user|has_group:"manager" %}
+  <div class="right">
+    <a href="{% url 'edit' %}?mcq={{mcqs.0.qid}}" class="btn-upload">
+      <i class="bx bxs-cloud-download"></i>
+      <span class="text">Edit questions</span>
+    </a>
+  </div>
+  {%endif%}
 </div>
 
 <div class="table-data">

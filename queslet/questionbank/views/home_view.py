@@ -7,6 +7,10 @@ from django.template.defaulttags import register
 
 # Create your views here.
 
+
+
+# get list of subjects 
+
 def get_context(request):
     isManager = False
 
@@ -22,7 +26,6 @@ def get_context(request):
         print(subjects)
         if len(subjects) == 0:
             context = {"subjects":subjects,"isManager" :isManager}
-            
             return context
         subjects_name = [sub.subject.subject for sub in subjects_access][0]
     else:
