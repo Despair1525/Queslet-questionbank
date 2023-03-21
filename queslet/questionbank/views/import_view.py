@@ -31,17 +31,17 @@ ques_regex = "(\[file:).*?(\])"
 op_regex = "([a-zA-Z]\.)"
 
 # Easy OCR 
-# reader = easyocr.Reader(['en','vi'])
+reader = easyocr.Reader(['en','vi'])
 
-# print("Connecting to pinecone")
-# conn = connector()
+print("Connecting to pinecone")
+conn = connector()
 
-# device = 'cuda' if torch.cuda.is_available() else 'cpu'
-# print("Device:",device)
-# print("Loading SBert Model ")
-# SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print("Device:",device)
+print("Loading SBert Model ")
+SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
 
-# #Sbert 
+#Sbert 
 
 def import_view(request):
    
@@ -57,6 +57,10 @@ def import_view(request):
             list_docx={}
             list_images={} 
             importSubject = request.session['subjectImport']
+            importSubject = Subject.objects.get(subject=importSubject)
+
+            #get Subject object
+            
             #validate and report:
             #Load Images and docx file  
             for file in files:
@@ -111,7 +115,7 @@ def import_view(request):
                     if len(list_id_dup) != 0:
                         duplicate_mcq.append((mcq,list_id_dup))
                         num_dup += len(list_id_dup)
-                    mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":mcq.subject,"haveImage":mcq.contain_img,"encode":encode,"qid":mcq.qid} 
+                    mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":str(mcq.subject),"haveImage":mcq.contain_img,"encode":encode,"qid":mcq.qid} 
                     mcq_lst.append(mcq.qid)
                     mcq_lst_encode.append(encode)
 
@@ -159,6 +163,8 @@ def submit_import(request):
         mcq = temp_dct[key_mcq]
         encode = mcq["encode"]
         subject = mcq["subject"]
+
+
         #generate new id
         user_name = request.user.username
         new_id = subject+"-"+user_name+"-"+get_time()
@@ -167,6 +173,9 @@ def submit_import(request):
         options = mcq["options"]
         answer = mcq["answer"]
         haveImage = mcq["haveImage"]
+
+        subject = Subject.objects.get(subject=subject)
+
         if haveImage:
             images = new_id+".png"
             temp_path = "media/temp/"+mcq["image"]
@@ -202,8 +211,9 @@ def submit_import(request):
         print("Import Mcq success !")
         print(save_mcq.subject)
         print(save_mcq.user)
+
         # save into Pinecone
-        result = conn.upload(qid=new_id,encode=encode,question=question,contain=haveImage,q_image=images,subject=subject)
+        result = conn.upload(qid=new_id,encode=encode,question=question,contain=haveImage,q_image=images,subject=str(subject) )
         print(result)
             # Remove file in temp 
     shutil.rmtree('media/temp')
@@ -267,7 +277,7 @@ def get_time():
     t_s = int(t)
     return str(t_s)
 
-def row2mcq(table,subject="math"):
+def row2mcq(table,subject):
     data = [[cell.text for cell in row.cells] for row in table.rows]
     mcq_options = []
     ans =""

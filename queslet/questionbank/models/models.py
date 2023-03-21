@@ -5,6 +5,9 @@ class Subject(models.Model):
     subject = models.TextField(primary_key=True)
     description = models.TextField(null=True,blank=True)
     user = models.ForeignKey(User, to_field="username",on_delete=models.CASCADE,default="admin")
+
+    def __str__(self):
+        return self.subject
  
 class SubjectAccess(models.Model):
     teacher = models.ForeignKey(User, to_field="username",on_delete=models.CASCADE)
@@ -29,7 +32,6 @@ class Mcq(models.Model):
 
     user = models.ForeignKey(User, to_field="username",on_delete=models.CASCADE,default="admin")
  
-
     
     def getMcq(self,question_image=""): 
         a = 97
