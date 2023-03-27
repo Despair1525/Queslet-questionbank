@@ -92,7 +92,7 @@ function toggle(source) {
 	document.getElementById("form-import").submit();
 
     document.body.style.backgroundColor='#9DC49F'
-	document.getElementsByTagName('body')[0].innerHTML = "<div id='cup' class='cup'><div class='handle'></div><div>" ; 
+	document.getElementsByTagName('body')[0].innerHTML = "<div id='cup' class='cup'><div class='handle'></div><div><p> Loading Mcqs</p></div><div>" ; 
 	document.getElementById('cup').style.display ='block';
 
 } 
