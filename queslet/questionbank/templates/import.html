@@ -6,23 +6,34 @@ class='active'
 {% endblock %}
 {% block content %} 
 			<!-- MAIN -->
-			{% if dup_result == None %}
-				<div class="head-title">
-					<div class="left">
-						<h1>Upload file folder</h1>
-					</div>
-				</div>
-				<div class="box-upload"> 
-				<form action ="{% url 'import_view' %}" method="post" enctype="multipart/form-data" >
-					{% csrf_token %}
-					<p>
-					{{form.file}}
-					<p>	
-	<input type="submit" value="upload" /> 
 
-	<input hidden type="text" value={{subjectImport}} name="subjectImport">
-					</form>
+
+			{% if dup_result == None %}
+				
+			<div id = 'head-title' class="head-title">
+				<div class="left">
+					<h1>Upload file folder</h1>
 				</div>
+			</div>
+			<div id = "box-upload"  class="box-upload"> 
+				{% comment %} "{% url 'import_view' %}" {% endcomment %}
+			 <form id='form-import' action =  "{% url 'import_view' %}"  method="post" enctype="multipart/form-data" >
+				{% csrf_token %}
+				<p>
+				{{form.file}}
+				<p>	
+<input  onclick="showLoad()"   type="submit" value="upload" /> 
+
+<input hidden type="text" value={{subjectImport}} name="subjectImport">
+				</form> 
+
+	
+				<div id='cup' class="cup">
+					<div class="handle"></div>
+				  </div>
+			</div>
+
+
 			{% else %}
 
 				<div class="head-title">

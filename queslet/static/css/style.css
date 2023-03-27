@@ -1179,3 +1179,52 @@ input[type=submit] {
 	margin-top: 20px;
 	font-weight: bolder;
   }
+
+
+  .cup{
+
+	
+	 height: 140px;
+	 width: 180px;
+	display: none;
+	border: 6px solid #9DC49F;
+	position: absolute;
+	top:40%;
+	left:40%;
+	border-radius: 0px 0px 70px 70px ;
+	background: url(../img/coffee.png);
+	box-shadow: 0px 0px 0px 6px white;
+	background-repeat: repeat-x;
+	background-position: 0px 14px ;
+	animation: fill 2.5s infinite;
+	}
+	@keyframes fill{
+	0%{
+	background-position: 0px 140px;
+	}
+	20%{
+	background-position: -450px 100px;
+	}
+	
+	40%{
+		background-position: -900px 50px;
+		}
+	
+	80%{
+		background-position: -1350px -40px;
+		}
+		100%{
+			background-position: 0px 140px;
+			}
+	
+	}
+	.handle {
+		height: 70px;
+		width: 40px;
+		background-color: transparent;
+		border: 6px solid white;
+		position: relative;
+		left:177px;
+		top: 10px;
+		border-radius: 0px 25px 80px 0px;
+		}

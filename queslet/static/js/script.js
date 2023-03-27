@@ -85,7 +85,17 @@ function toggle(source) {
 
 
 
+  function showLoad() {
 
+    // document.getElementById('form-import').style.display ='none';
+	// document.getElementById('head-title').style.display ='none';
+	document.getElementById("form-import").submit();
+
+    document.body.style.backgroundColor='#9DC49F'
+	document.getElementsByTagName('body')[0].innerHTML = "<div id='cup' class='cup'><div class='handle'></div><div>" ; 
+	document.getElementById('cup').style.display ='block';
+
+} 
 	
 
 
