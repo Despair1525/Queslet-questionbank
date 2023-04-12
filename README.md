@@ -12,12 +12,12 @@ The website is used to manage the question bank, support users to enter accordin
 
 ## Framework
 
-[![PyPI Status](https://badge.fury.io/py/easyocr.svg)](https://badge.fury.io/py/easyocr) [![EasyOcr](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/JaidedAI/EasyOCR) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.to/easyocr) 
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/)
+[![Python 3.8](https://img.shields.io/badge/Python-3.8-blue)](https://www.python.org/downloads/release/python-380/) [![Django](https://img.shields.io/badge/Django-4.1.7-green)](https://www.djangoproject.com/) [![EasyOcr](https://img.shields.io/badge/EasyOCR-%202.0-blue.svg)](https://github.com/JaidedAI/EasyOCR) [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/) [![PostSQL](https://img.shields.io/badge/PostSql-blue)](https://www.postgresql.org/) [![Pinecone](https://img.shields.io/badge/Pinecone-blue)](https://www.pinecone.io/learn/vector-indexes/)
 
-## Deployment
+## Installation
 
-To deploy this project 
+Before run install all library in requirement.txt. 
+
 
 ```bash
   npm run deploy
