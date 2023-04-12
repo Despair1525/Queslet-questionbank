@@ -17,6 +17,8 @@ The website is used to manage the question bank, support users to enter accordin
 ## Deployment
 Before run install all library in requirements.txt. 
 
+### Model
+- Create folder 'queslet/model/' inside application and unzip [Sbert Model](https://drive.google.com/file/d/1-nxMDQR7P3vXBHfx6dppcMm1ah64v6_g/view?usp=share_link)
 ### Installation 
 - Create database name 'queslet'
 - Change password postSql in file setting.py
