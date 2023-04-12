@@ -51,4 +51,5 @@ class connector():
             self.index = pinecone.Index('qb-mcq-index')
             result = self.index.upsert(row,namespace=subject)
         return result
-
+    def remove_index(self,ids,namespace):
+        return self.index.delete(ids=ids, namespace= namespace )

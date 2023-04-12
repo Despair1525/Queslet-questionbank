@@ -52,7 +52,7 @@
 		</li> {% endcomment %}
 
 		<li {% block activeExport %} {% endblock %} >
-			<a href="{% url "export_view" %}?subject={{subjects_selected}}">
+			<a href="{% url "export_view" %}?subject={{request.session.subjects_selected}}">
 				<i class='bx bxs-cloud-download'></i>
 				<span class="text">Export questions</span>
 			</a>

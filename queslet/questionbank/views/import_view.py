@@ -11,6 +11,7 @@ from django.contrib.auth import login
 
 from ..models.models import Mcq,Subject,SubjectAccess
 from ..ultils import isManger
+from ..api import api_encode
 from docx import Document
 import os
 import shutil
@@ -25,6 +26,7 @@ from sentence_transformers import SentenceTransformer
 from sentence_transformers import SentenceTransformer, util
 from ..Dbcontext import connector
 
+
 #regex find image_path 
 img_regex = "(?<=\[file: ).+?(?=\])"
 ques_regex = "(\[file:).*?(\])"
@@ -36,18 +38,15 @@ reader = easyocr.Reader(['en','vi'])
 print("Connecting to pinecone")
 conn = connector()
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print("Device:",device)
-print("Loading SBert Model ")
-SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
-
 #Sbert 
 
 def import_view(request):
    
 
     if request.method == "POST" :
+
         if 'submit_import' in request.POST:
+            print("IMPORT NEW MCQ !")
             request.session['forward'] = False
             return submit_import(request)
         else:
@@ -58,9 +57,7 @@ def import_view(request):
             list_images={} 
             importSubject = request.session['subjectImport']
             importSubject = Subject.objects.get(subject=importSubject)
-
             #get Subject object
-            
             #validate and report:
             #Load Images and docx file  
             for file in files:
@@ -85,10 +82,19 @@ def import_view(request):
                     # print("Image_path:",file_url)
             duplicate_mcq =[]
             num_dup = 0
+            num_dup_db = 0
+            num_dup_doc = 0
+            num_dup_mix = 0
+
             mcqs_set={}
             mcq_lst = []
             mcq_lst_encode = []
             not_found = []
+
+            # check if have docx file 
+            if len(list_docx) == 0:
+                form = UploadFileForm()
+                return render(request, 'import.html',{"mess":"Not found .docx file !",'form':form,'subjectImport':importSubject})
 
             for key in list_docx.keys():
                 for mcq in list_docx[key]:
@@ -103,36 +109,52 @@ def import_view(request):
                             print("NOT FOUNd:",mcq.q_image)
                             mcq_image_text=""
                             not_found.append(mcq.q_image)
-
                     mcq_form = mcq.getMcq(mcq_image_text)
                         # print(mcq_form)
-
-                    encode = SbertModel.encode(str(mcq_form)).tolist()
+                    # encode = SbertModel.encode(str(mcq_form)).tolist()
+                    encode = api_encode(str(mcq_form))
                     print(str(mcq.subject).strip())
                     result = conn.query_mcqs_encode(encode,str(mcq.subject).strip(),k=5)
                         # Filter dictionary by keeping elements whose keys are divisible by 2
-                    list_id_dup = [ (d["id"],d["score"]) for d in result["matches"] if d["score"] >= 0.75] 
+                    list_id_dup = [ (d["id"], np.round(d["score"],2) ) for d in result["matches"] if d["score"] >= 0.7] 
+                    print( list_id_dup)
+                    mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":str(mcq.subject),"haveImage":mcq.contain_img,"encode":encode,"qid":mcq.qid ,"dup_type":0  } 
+
                     if len(list_id_dup) != 0:
-                        duplicate_mcq.append((mcq,list_id_dup))
+                        duplicate_mcq.append((mcq,list_id_dup,1))
                         num_dup += len(list_id_dup)
-                    mcqs_set[mcq.qid] = {"id":mcq.qid,"question":mcq.question,"image":mcq.q_image,"options":mcq.options,"answer":mcq.answer_q,"subject":str(mcq.subject),"haveImage":mcq.contain_img,"encode":encode,"qid":mcq.qid} 
+                        num_dup_db += len(list_id_dup)
+                        mcqs_set[mcq.qid]["dup_type"] = 1
                     mcq_lst.append(mcq.qid)
                     mcq_lst_encode.append(encode)
 
-                
+            # compare all mcq in docs 
             pairs = cosin_pair(mcq_lst_encode)
             for pair in pairs:
                 i, j = pair['index']
                 temp_mcq = mcqs_set[mcq_lst[i]]
                 # print("temp_mcq",temp_mcq)
-                duplicate_mcq.append((temp_mcq,[(mcq_lst[j],pair['score'])]))
+                duplicate_mcq.append((temp_mcq,[(mcq_lst[j], np.round(pair['score'] ,2),2  )],2))
+              
                 num_dup += 1
+                num_dup_doc += 1
                 print("{} \t\t {} \t\t Score: {:.4f}".format(mcq_lst[i], mcq_lst[j], pair['score']))
+
+                # kiem tra da bi trung trong database chua 
+
+                if mcqs_set[mcq_lst[i]]['dup_type'] == 1:
+                    mcqs_set[mcq_lst[i]]['dup_type'] = 3
+                    num_dup_mix += 1
+                    num_dup_doc -= 1
+                    # num_dup_db -= 1
+
+                else:
+                    mcqs_set[mcq_lst[i]]['dup_type'] = 2
 
             request.session['temp_mcq'] = mcqs_set
             print("import length:",len(mcqs_set))
             # print("import length:",mcqs_set)     
-            return render(request, 'import.html',{'dup_result':duplicate_mcq,"num_dup":num_dup,"not_found":not_found})
+            return render(request, 'import.html',{'dup_result':duplicate_mcq,"num_dup":num_dup,"num_dup_mix":num_dup_mix,"num_dup_doc":num_dup_doc,"num_dup_db":num_dup_db,"not_found":not_found})
     else:
 
          #authen the subject import 

@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'questionbank',
     'users',
-    'mathfilters'
+    'modelapi',
+    'mathfilters',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

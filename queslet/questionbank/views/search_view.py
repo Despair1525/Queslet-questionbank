@@ -9,11 +9,13 @@ from ..validations import standardizedText
 import torch
 from sentence_transformers import SentenceTransformer
 from ..Dbcontext import connector
-# load Sbert model 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-# # print("Device:",device)
-# # print("Loading SBert Model ")
-SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
+from ..api import api_encode
+
+# # load Sbert model 
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# # # print("Device:",device)
+# # # print("Loading SBert Model ")
+# SbertModel = SentenceTransformer('model\\all-mpnet-finetune-5epochs',device=device)
 # # connect to pinecone
 # # print("Connecting to pinecone")
 conn = connector()
@@ -32,7 +34,8 @@ def search_view(request):
 
             print("Search query:",search_text,"-Subject:",subject_selected)
 
-            encode_search = SbertModel.encode(str(search_text)).tolist()
+            # encode_search = SbertModel.encode(str(search_text)).tolist()
+            encode_search = api_encode(str(search_text))
             search_result = conn.query_mcqs_encode(encode_search,subject_selected,k=10)
 
             print(search_result)

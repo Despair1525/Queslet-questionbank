@@ -3,7 +3,7 @@ from django import forms
 from django.forms import ModelForm
 from .models.models import Mcq
 class UploadFileForm(forms.Form):
-    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple':True}))
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple':True,'accept':'image/*,.doc, .docx'}))
 
 class McqForm(ModelForm):
     class Meta:

@@ -15,8 +15,13 @@ class='active'
 					<h1>Upload file folder</h1>
 				</div>
 			</div>
+			{% if mess %}
+				<div class="alert-warning"> {{mess}}</div>
+				{% endif %}
 			<div id = "box-upload"  class="box-upload"> 
 				{% comment %} "{% url 'import_view' %}" {% endcomment %}
+
+				
 			 <form id='form-import' action =  "{% url 'import_view' %}"  method="post" enctype="multipart/form-data" >
 				{% csrf_token %}
 				<p>
@@ -37,16 +42,53 @@ class='active'
 			{% else %}
 
 				<div class="head-title">
-					<div class="left">
+					<div class="left ">
 						<h1>Found <b>{{num_dup}}</b> duplicate questions</h1>
+
 					</div>
 				</div>
-
 				{% if not_found %}
-				{% for message in not_found %}
-				<div class="alert-warning"> Not found {{message}}</div>
-				{% endfor %}
+				<div class="icon">
+					<i class='bx bx-bell'></i>
+					<div class="notifi-box">
+						<h2> Notifications  </h2>
+							
+						{% for message in not_found %}
+						<div class="notifi-item">
+						<div class="alert-warning"> Not found {{message}}</div>
+					</div>
+						{% endfor %}
+						
+					</div>
+				
+				</div>
 				{% endif %}
+<ul class="box-info2">
+	<li>
+		<i class='bx bx-data'></i>
+		<span class="text">
+			<h3>{{num_dup_db}}</h3>
+			<p>Duplicate in database</p>
+		</span>
+	</li>
+	 <li>
+		<i class='bx bx-file'></i>
+		<span class="text">
+			<h3>{{num_dup_doc}}</h3>
+			<p>Duplicate in word file</p>
+		</span>
+	</li>
+
+	<li>
+		<i class='bx bx-git-merge'></i>
+		<span class="text">
+			<h3>{{num_dup_mix}}</h3>
+			<p>Duplicate in both</p>
+		</span>
+	</li>
+
+</ul>
+		
 
 				<div class="table-data">
 					<div class="order">
@@ -83,22 +125,41 @@ class='active'
 
 						<div class="todo">
 							<div class="head">
-								<h3>Import mcqs</h3>
+								<h3>Check Import Mcqs</h3>
 							</div>
 
-							<form action ="{% url 'import_view' %}" method ="post">
+							<form id='form-upload' action ="{% url 'import_view' %}" method ="post">
 								{% csrf_token %}
 							<ul class="todo-list">
-								{% for mcq_import in request.session.temp_mcq %}
+								{% for mcq_import,mcq_value in request.session.temp_mcq.items %}
 
- 							 <li class="completed">
+ 							 <li 
+							 
+							 
+						
+							 {% if mcq_value.dup_type == 1 %}
+							 class="dup_db"  
+							 {% elif mcq_value.dup_type == 2  %}
+							 class="dup_doc"  
+							 {% elif mcq_value.dup_type == 3  %}
+							 class="dup_mix"  
+							 {% else  %}
+							 class="completed non-display"  
+						
+								{%endif%}	
+							 
+							 >
 								<label  for="{{mcq_import}}"><a href="{% url "mcq_view" %}?mcq={{mcq_import}}&temp=1">{{mcq_import}}</a></label>
-								<input type="checkbox"  name="check_import" id={{mcq_import}} value="{{mcq_import}}" checked>
+								{% comment %} dup_typp= {{mcq_value.dup_type}} {% endcomment %}
+								<input type="checkbox"  name="check_import" id={{mcq_import}} value="{{mcq_import}}" 
+								
+								>
               					</li>
 								{% endfor %}
 							</ul>
 							<div class="row">
-							<input name="submit_import" type="submit" value="submit_import">
+							<input name="submit_import" type="submit" value="submit import" onclick="showLoad2()" >
+							<input hidden name="submit_import" type="text" value="submit import">
 
 						</div>
 						</form>

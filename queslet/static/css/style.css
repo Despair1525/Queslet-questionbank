@@ -17,6 +17,7 @@ li {
 :root {
 	--poppins: 'Poppins', sans-serif;
 	--lato: 'Lato', sans-serif;
+	--luci: 'Lucida Sans';
 
 	--light: #F9F9F9;
 	--theme-light: #9DC49F;
@@ -27,10 +28,13 @@ li {
 	--dark-grey: #AAAAAA;
 	--dark: #342E37;
 	--red: #DB504A;
+	--red-light: #d47976;
 	--yellow: #FFCE26;
+	--red-yellow: #f1cd59; 
 	--light-yellow: #FFF2C6;
 	--orange: #FD7238;
 	--light-orange: #FFE0D3;
+	--light-purpose:  #ae76d4;
 }
 
 html {
@@ -448,6 +452,50 @@ body {
 
 
 
+#content main .box-info2 {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	grid-gap: 24px;
+	margin-top: 36px;
+}
+#content main .box-info2 li {
+	padding: 24px;
+	background: var(--light);
+	border-radius: 20px;
+	display: flex;
+	align-items: center;
+	grid-gap: 24px;
+}
+#content main .box-info2 li .bx {
+	width: 80px;
+	height: 80px;
+	border-radius: 10px;
+	font-size: 36px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#content main .box-info2 li:nth-child(1) .bx {
+	background: var(--red-light);
+	color: whitesmoke;
+}
+#content main .box-info2 li:nth-child(2) .bx {
+	background: var(--red-yellow);
+	color: whitesmoke;
+}
+#content main .box-info2 li:nth-child(3) .bx {
+	background: var(--light-purpose);
+	color:whitesmoke;
+}
+#content main .box-info2 li .text h3 {
+	font-size: 24px;
+	font-weight: 600;
+	color: var(--dark);
+}
+#content main .box-info2 li .text p {
+	color: var(--dark);	
+}
+
 
 #content main .table-data {
 	display: flex;
@@ -599,6 +647,21 @@ margin: 15px;
 #content main .table-data .order table tr td .status.process {
 	background: var(--yellow);
 }
+
+#content main .table-data .order table tr td .status.dup_db {
+	background: var(--red-light);
+}
+
+#content main .table-data .order table tr td .status.dup_doc {
+	background: var(--red-yellow);
+}
+
+#content main .table-data .order table tr td .status.dup_mix {
+	background: var(--light-purpose);
+}
+
+
+
 #content main .table-data .order table tr td .status.pending {
 	background: var(--orange);
 }
@@ -627,6 +690,24 @@ margin: 15px;
 #content main .table-data .todo .todo-list li.completed {
 	border-left: 10px solid var(--theme);
 }
+
+/* #content main .table-data .todo .todo-list li.non-display {
+	display: none
+	;
+} */
+
+#content main .table-data .todo .todo-list li.dup_db {
+	border-left: 10px solid var(--red-light);
+}
+
+#content main .table-data .todo .todo-list li.dup_doc {
+	border-left: 10px solid var(--red-yellow);
+}
+
+#content main .table-data .todo .todo-list li.dup_mix {
+	border-left: 10px solid var(--light-purpose);
+}
+
 #content main .table-data .todo .todo-list li.not-completed {
 	border-left: 10px solid var(--orange);
 }
@@ -842,6 +923,18 @@ line-height: 50px;
 
   border: 1px solid var(--dark-grey);
 	  }
+
+	  .table-data .submit-remove{
+background-color: var(--red);
+margin-right: 10px;
+
+}
+
+.table-data .submit-remove:hover{
+	background-color: var(--red-light);
+	
+	}
+
 	  .box-upload #id_file {
 		color: var(--dark-grey);
 		font-weight: bold;
@@ -1229,9 +1322,56 @@ input[type=submit] {
 		.cup p {
 
 			color: white;
-			font-weight: bolder;
-			font-size: 20px;
-			font-family: var(--lato);
+			font-size: 18px;
+			font-family:'Bahnschrift SemiBold';
 			top: 25px;
 			text-align: center;
 		}
+
+
+.icon {
+	cursor: pointer;
+}
+.icon i {
+	font-size: 35px;
+	color: var(--red) ;
+}
+
+.icon i:hover{
+	opacity: 0.7;
+}
+
+.icon i:hover ~ .notifi-box{
+	display: block;
+}
+
+.icon .notifi-box:hover{
+	display: block;
+}
+
+
+.notifi-box{
+	display: none;
+overflow: scroll;
+width: 300px;
+position: absolute;
+transition-property: 63px;
+box-shadow: 0 4px 8px rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+background: white;
+}
+
+.notifi-box h2 {
+
+font-size: 14px;
+padding: 10px;
+border-bottom: 1px solid #eee;
+color: #999;
+}
+
+.notifi-item {
+
+	border-bottom: 1px solid #eee;
+	padding:15px 5px;
+	margin-bottom: 10px;
+	cursor: pointer;
+	}

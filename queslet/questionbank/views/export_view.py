@@ -34,8 +34,13 @@ def export(request):
     if request.method == "GET":
         # Load data
         #database 
+
+
         subjects_selected = request.GET.get("subject")
         print(subjects_selected)
+
+        request.session['subjects_selected'] = subjects_selected
+        
         context["subjects_selected"] = subjects_selected
         return render(request, 'export.html',context)
     elif request.method == 'POST':

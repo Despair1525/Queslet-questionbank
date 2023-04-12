@@ -23,9 +23,9 @@ class SubjectAccess(models.Model):
 class Mcq(models.Model):
     qid = models.CharField(primary_key=True,max_length=100)
     question = models.TextField(null= True, blank= True)
-    options = models.CharField(max_length=1000)
+    options = models.CharField(max_length=5000)
     q_image =models.CharField(null= True, blank= True,max_length=500)
-    answer_q = models.CharField(null= True, blank= True,max_length=500)
+    answer_q = models.CharField(null= True, blank= True,max_length=5000)
     subject = models.ForeignKey(Subject, to_field="subject",on_delete=models.CASCADE)
     contain_img = models.BooleanField()
     img_file = models.ImageField(null= True, blank= True, upload_to="images/")

@@ -92,11 +92,26 @@ function toggle(source) {
 	document.getElementById("form-import").submit();
 
     document.body.style.backgroundColor='#9DC49F'
-	document.getElementsByTagName('body')[0].innerHTML = "<div id='cup' class='cup'><div class='handle'></div><div><p> Loading Mcqs</p></div><div>" ; 
+	document.getElementsByTagName('body')[0].innerHTML = "<div id='cup' class='cup'><div class='handle'></div><div><p> LOADING MCQS</p></div><div>" ; 
+	document.getElementById('cup').style.display ='block';
+
+} 
+function showLoad2() {
+
+    // document.getElementById('form-import').style.display ='none';
+	// document.getElementById('head-title').style.display ='none';
+
+	document.getElementById("form-upload").submit();
+    document.body.style.backgroundColor='#9DC49F'
+	document.getElementsByTagName('body')[0].innerHTML = "<div id='cup' class='cup'><div class='handle'></div><div><p> UPLOADNG</p></div><div>" ; 
 	document.getElementById('cup').style.display ='block';
 
 } 
 	
 
-
-
+ function show_alert() {
+	if(!confirm("Do you really want to do this?")) {
+	  return false;
+	}
+	this.form.submit();
+  } 

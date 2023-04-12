@@ -8,6 +8,7 @@
 <div class="table-data">
   <div class="order">
     <form
+      onsubmit=" return show_alert()"
       action="{% url 'edit' %}"
       method="POST"
       class="McqForm"
@@ -15,8 +16,8 @@
     >
       {% csrf_token %} {{form.as_p}}
       <input hidden readonly name="qid" value="{{mcq_id}}" />
-
       <input type="submit" name="submit" />
+      <input class="submit-remove" type="submit" name="remove" value="remove" />
     </form>
   </div>
 </div>

@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django import template
 from django.template.defaulttags import register
 
+
 # Create your views here.
 
 
@@ -12,6 +13,15 @@ from django.template.defaulttags import register
 # get list of subjects 
 
 def get_context(request):
+
+    # text =" manh dep trai"
+    # link = 'http://127.0.0.1:8000/model/encode?mcq=' + text
+    # print(link)
+
+    # basic = HTTPBasicAuth('manhpd15', 'Test1508')
+    # response = requests.get(link,auth=basic)
+    # print(response.json() )
+
     isManager = False
 
     User =  request.user
@@ -32,12 +42,21 @@ def get_context(request):
         subjects = Subject.objects.all()
     subjects_name = [sub.subject for sub in subjects][0]
 
+    try:
+        subject_session = request.session['subjects_selected']
+        subjects_name = subject_session if subject_session is not None else subjects_name
+    except:
+        print("not have any subject selected in session")
+
     subjects_access_name = [sub.subject for sub in subjects]
     print(subjects_access_name)
     subjects_name_select =  request.GET.get("subject",subjects_name)
 
     if subjects_name_select in subjects_access_name:
         subjects_name = subjects_name_select
+
+    # store in session 
+    request.session['subjects_selected'] = subjects_name
     result = result.filter(subject=subjects_name)
     print(subjects)
     have_img = result.filter(contain_img =True)
